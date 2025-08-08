@@ -1,0 +1,89 @@
+\subsection{RLWE e RGSW}
+Nesta seção os esquemas e seus parâmetros serão apresentados tais como descritos em \cite{lw23I} com 
+os detalhes específicos utilizados na implementação. Ambos esquemas tem sua segurança baseada no problema Learning With Errors(LWE), problema creditado como difícil \cite{BrakerskiEtAl2013}. Porém, provas e discussões sobre sua dificuldade e definições de parâmetros se estendem juntamente a padronização do NIST \cite{Balbas2021}. 
+
+É necessário a introduzir a operações de decomposição. Tome o vetor $g^\top = (1, 2, \dots, 2^{\ell-1})$ e a matriz definida por $G = g^\top \otimes I_2$.  
+
+\begin{lemma}[lema 2.3 \cite{lw23I}]
+Dado um inteiro $q$, seja $\ell = \lceil \log q \rceil$, $\mathbf{g}^\top = (1, 2, \dots, 2^{\ell - 1})$ e uma base fixa $\mathbb{Z}_q$ de $\{ \mathbf{b}_1, \dots, \mathbf{b}_n \}$ de $\mathcal{O}_K / q \mathcal{O}_K$. Então, existe uma função aleatória e eficientemente computável
+\[
+\mathbf{g}^{-1} : \mathcal{O}_K / q \mathcal{O}_K \rightarrow \mathcal{O}_K^\ell
+\]
+tal que a saída da função, $\mathbf{x} \leftarrow \mathbf{g}^{-1}(a)$, sempre satisfaz $\langle \mathbf{g}, \mathbf{x} \rangle = a \bmod q$.
+
+Mais especificamente, se $a = a_1 \mathbf{b}_1 + \dots + a_n \mathbf{b}_n$ onde $a_i \in \mathbb{Z}_q$ e $\mathbf{x}_i \leftarrow \mathbf{g}^{-1}(a_i)$ (onde a função $\mathbf{g}^{-1}(\cdot)$ é definida no Lema~2.1), então:
+\[
+\mathbf{x} = \mathbf{x}_1 \mathbf{b}_1 + \dots + \mathbf{x}_n \mathbf{b}_n
+\]
+e cada vetor $\mathbf{x}_i \in \mathbb{Z}_q^\ell$ é sub-Gaussiano com parâmetro $O(1)$.
+\end{lemma}
+
+Perceba que é possível definir a mesma função para $G$, $G^{-1}$. A mesma se baseia na aplicação da anterior nas devidas linhas tal que $\langle \mathbf{G}, \mathbf{G^{-1}(x)} \rangle = x$.
+
+Abaixo estão presentes os parâmetros utilizados nos esquemas:
+
+\begin{itemize}[itemsep=0pt, parsep=0pt]
+    \item[-] $\lambda$: o parâmetro de segurança
+    \item[-] $\mathcal{R}$: o anel ciclotômico $\frac{\mathbb{Z}[x]}{<\Phi_{m}(x)>}$
+    \item[-] $Q$: o módulo inteiro onde as cifras operam
+    \item[-] $\mathcal{R}_{Q}$: o anel quociente $\mathcal{R}/Q\mathcal{R}$
+    \item[-] $\mathcal{D_{\sigma}}$: Distribuição gaussiana discreta de ruído sobre $\mathcal{R}$ com desvio padrão $\sigma$.
+    \item[-] $l$ = $\log_t(Q)$ 
+    \item[-] $t$: o módulo da mensagem no RLWE, para o RGSW utilizado considera-se $t=2$
+\end{itemize}
+
+\subsubsection{Esquema RLWE}
+
+\begin{itemize}[itemsep=0pt, parsep=0pt]
+    \item[-] \textbf{KeyGen}($1^{\lambda}$): Amostre uma chave secreta $s \leftarrow \mathcal{R}_Q$
+    \item[-] \textbf{Enc}(sk, $\mu \in \mathcal{R}_t$): Amostre um elemeto uniforme do anel $a \leftarrow \mathcal{R}_q$ e
+um erro $e \leftarrow \mathcal{D_{\sigma}}$. Retorne um criptograma definido por 
+    $$
+    c := (a, sa + \left\lfloor \frac{Q}{t} \right\rceil \mu + e)
+    $$
+    \item[-] \textbf{Dec}(c, sk): O algoritmo retorna um elemento $\mu \in \mathcal{R}_t$ definido por:
+    $$
+        \mu = \left\lfloor t \left\langle (1,-s),c \right\rangle/Q \right\rceil  \pmod{t}  
+    $$
+\end{itemize}
+
+O ruído de um criptograma $c$ que ecriptma $\mu$ sobre a chave secreta $s$ pode ser definido por 
+$$Err_\mu(c) = \left\langle (-s,1), c \right\rangle- \left\lfloor \frac{Q}{t} \right\rceil \mu$$
+
+\subsubsection{Esquema RGSW}
+
+\begin{itemize}[itemsep=0pt, parsep=0pt]
+    \item[-] \textbf{KeyGen}($1^{\lambda}$): Amostre uma chave secreta $s \leftarrow \mathcal{R}_Q$.
+    \item[-] \textbf{Enc}(sk, $\mu \in \mathcal{R}$): Amostre um vetor uniformemente $\mathbf{a} \leftarrow \mathcal{R}_Q^{2\ell}$ e um vetor de ruído $e \leftarrow D_{\sigma}^{2\ell}$. Retorne um 
+    criptograma definido por $C := \begin{pmatrix} s \mathbf{a}^\top + \mathbf{e}^\top \\ \mathbf{a}^\top \end{pmatrix} + \mu \mathbf{G} \in R_Q^{2 \times 2\ell}$
+    \item[-] \textbf{Dec}(c, sk): O algortimo retorna um elemento $\mu \in \mathcal{R}/2\mathcal{R}$:
+    $$ 
+    \mu = \left\lfloor \left\langle (1,-s),_{(2\ell -1)}c \right\rangle/Q \right\rceil  \pmod{2}  
+    $$
+    
+\end{itemize}
+
+O ruído de um criptograma $C$ que encripta a mensagem $\mu$ sobre a chave secreta $sk = (1, -s)^T$ pode ser
+definido por $Err_\mu(C) = e^T = sk^T \cdot C - \mu \cdot sk^T \cdot G$ 
+
+\paragraph{Operações}
+
+\begin{itemize}
+    \item[-] \textbf{Soma Homomórfica} $C_1 \boxplus C_2 $: Recebe dois criptogramas RGSW $C_1, C_2$ cifrados sobre a mesma chave e retorna $C_1 \boxplus C_2 := C_1 + C_2$. 
+    O novo criptograma obtido cifra a soma das mensagens ($\mu_1, \mu_2$):
+    $$
+    C_1 + C_2 = \begin{pmatrix} s (\mathbf{a_1}^\top + \mathbf{a_2}^\top) + \mathbf{E}^\top \\ \mathbf{a_1}^\top + \mathbf{a_2}^\top \end{pmatrix} + (\mu_1 + \mu_2) \mathbf{G}
+    $$
+    \item[-] \textbf{Multiplicação Homomórfica} $C_1 \boxdot C_2$: Recebe dois criptogramas RGSW $C_1, C_2$ cifrados sobre a mesma chave e retorna $C_1 \boxdot C_2 := C_1 \mathbf{G^{-1}}(C_2)$. 
+    O novo criptograma obtido cifra a multiplicação das mensagens ($\mu_1, \mu_2$): 
+    $$
+    C_1 \mathbf{G^{-1}}(C_2) = \begin{pmatrix} s \mathbf{a_1}^\top + \mathbf{e_1}^\top \\ \mathbf{a_1}^\top \end{pmatrix} \mathbf{G^{-1}}(C_2)  + (\mu_1) \begin{pmatrix} s \mathbf{a_2}^\top + \mathbf{e_2}^\top \\ \mathbf{a_2}^\top \end{pmatrix} + \mu_1 \mu_2 \mathbf{G}
+    $$
+    $$
+        = \begin{pmatrix} s (\mathbf{a_1}^\top \mathbf{G^{-1}}(C_2) + \mu_1 \mathbf{a_2}^\top) + \mathbf{e_1}^\top \mathbf{G^{-1}}(C_2) + \mu_1 \mathbf{e_2}^\top \\ \mathbf{a_1}^\top + \mu_1 \mathbf{a_2}^\top \end{pmatrix}  + \mu_1 \mu_2 \mathbf{G}
+    $$
+    \item[-] \textbf{Produto Externo} $C_1 \boxtimes c_2 $: Recebe um criptogramas RGSW e um RLWE $C_1, C_2$ respectivamente cifrados sobre a mesma chave e retorna $C_1 \boxtimes C_2 := C_1 \mathbf{g^{-1}}(c_2)$. 
+    O novo criptograma obtido cifra a multiplicação das mensagens ($\mu_1, \mu_2$) pelo processo análogo ao anterior, suprimido para conscisão.
+\end{itemize}
+
+Para checar a implementação dos esquemas e cada uma das operações descritas, aquém da multiplicação homomórfica, acesse o github \footnote{\url{https://github.com/gustavoesteche/ic-bootstraping}} 

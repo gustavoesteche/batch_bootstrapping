@@ -1,0 +1,27 @@
+\subsection{Composição de anéis} 
+
+Considere $m \in \mathbb{Z}$, o objetivo é estudar como compor o anel ciclotômicos coprimos, em um anel ciclotômico resultante $R_m = \mathbb{Q}[X]/\langle\Phi_m(X)\rangle$, onde $\Phi_m(X)$ é o $m$-ésimo polinômio ciclotômico. Como $\mathbb{Q}$ é um corpo e $\Phi_m(X)$ é irredutível sobre $\mathbb{Q}$, por ter raízes primitivas da unidade em $\mathbb{C}$, $R_m$ é um corpo. Além disso, seja $K_m = \mathbb{Q}(\zeta_m)$ a extensão gerada por uma raiz primitiva da unidade de ordem $m$. Pelo isomorfismo $X \mapsto \zeta_m$, temos $R_m \cong K_m$, e portanto decompor $R_m$ equivale a decompor $K_m$. A base canônica (ou de potências) do anel $R_m$ é dada por $B = \{1, X, X^2, \dots, X^{\phi(m)-1}\}$, cujos elementos são linearmente independentes sobre $\mathbb{Q}$. Via isomorfismo, esta base corresponde a $\{1, \zeta_m, \zeta_m^2, \dots, \zeta_m^{\phi(m)-1}\}$ em $K_m$.
+
+Seja $m = \prod_l m_l$, com cada $m_l$ uma potência de primo. Conforme \cite{lyubashevsky2013}, o corpo $K_m$ admite a decomposição:
+\begin{equation}
+    K_m \cong \bigotimes_l K_{m_l},
+\end{equation}
+e, analogamente, em termos de anéis polinomiais: $K_m \cong \bigotimes_l \mathbb{Q}[X_l]/\langle\Phi_{m_l}(X_l)\rangle.$
+
+Dessa forma, uma base natural de $K_m$ é o conjunto dos multinômios $\prod_l X_l^{j_l}$ com $0 \leq j_l < \phi(m_l)$, formando a chamada \textit{powerful basis}. Como $\phi(m) = \prod_l \phi(m_l)$, essa base tem o tamanho correto.
+
+A \textit{powerful basis} $\vec{p}$ de $K_m$ é o produto tensorial das bases $\vec{p_l}$ de cada $K_{m_l}$. Os índices do tensor podem ser achatados para formar uma base unidimensional, como discutido em \cite{lyubashevsky2013}. O ponto crucial é entender como efetivar o produto tensorial entre os elementos dos anéis $R_{m_l}$. 
+
+Para isso, usa-se o isomorfismo $X_l \mapsto X^{m/m_l}$, que preserva a relação $\zeta_{m_l} = \zeta_m^{m/m_l}$. Por exemplo, para $m=15$, com $p_3 = \{1, x_3\}$ e $p_5 = \{1, x_5, x_5^2, x_5^3\}$, obtém-se a base $p = \{1, x^3, x^5, x^6, x^8, x^9, x^{11}, x^{14}\}$, como mostrado em \cite{lyubashevsky2013}. Então, de forma generalizada, para realizar o produto tensorial entre os elementos dos anéis $R_{m_l}$, temos:
+\begin{equation}
+    \prod_{l} \Big( \sum_{i=0}^{\phi(m_l)} a_{il} x^{i m/ml} \Big) \in R_m
+\end{equation}
+
+Por fim, como demonstrado em \cite{lyubashevsky2013}, o isomorfismo $\sigma$ de $K_m$ é o produto tensorial dos embeddings canônicos $\sigma^{(l)}$ de cada $K_{m_l}$:
+
+\begin{equation}
+    \label{eq:ring_embeddings}
+    \sigma\left(\bigotimes_l a_l\right) = \bigotimes_l \sigma^{(l)}(a_l).
+\end{equation}
+
+Ou seja, aplicar os homomorfismos antes ou depois do produto tensorial resulta na mesma imagem, o que será explorado a seguir.

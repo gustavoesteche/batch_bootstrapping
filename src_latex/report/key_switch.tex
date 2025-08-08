@@ -1,0 +1,89 @@
+\subsection{Algoritmo de Key Switch}
+Primeiramente, é necessário introduzir o conceito de troca de chave, \textit{key-switch}. Como está no nome, esse algoritmo tem por objetivo trocar a chave na qual um criptograma está crifrado. 
+
+\subsubsection{Descrição matemática do Algoritmo}
+
+\begin{enumerate}
+    \item \textbf{Criptograma Original:} Um criptograma $\RLWE$ $c = (a, b) \in \mcR^2$ cifra uma mensagem $\mu$ sob a chave $s'$ se
+    \[
+        b = a \cdot s' + e + \mu \cdot \Delta
+    \]
+    onde $e$ é o ruído e $\Delta = Q/B$.
+
+    \item \textbf{Chave de Troca de Chave ($K_{s' \to s}$):} É um conjunto de criptogramas $\{k_i\}$ que cifram múltiplos da antiga chave $s'$ sob a nova chave $s$.
+    Cada $k_i \in K_{s' \to s}$ é um criptograma $\RLWE_s(s' \cdot g[i])$.
+
+    \item \textbf{Procedimento:}
+    \begin{itemize}
+        \item Calcula-se um criptograma de $a \cdot s'$ sob a nova chave $s$ via
+        \[
+            (a_{\text{new}}, b_{\text{new}}) = \sum_{i=0}^{\ell-1} k_i \cdot g^{-1}(a)[i]
+        \]
+        \item Agora vamos calcular o criptograma procurado,
+        \[
+            c' = (-a_{\text{new}}, b - b_{\text{new}}).
+        \]
+    \end{itemize}
+
+    \item \textbf{Verificação:} Decifrando $c' = (a', b')$ com a chave $s$, temos:
+    \[
+        b' + a' \cdot s = (b - b_{\text{new}}) - a_{\text{new}} \cdot s \approx b - (b_{\text{new}} + a_{\text{new}} \cdot s) \approx b - a \cdot s'.
+    \]
+    Como $b = a \cdot s' + e + \mu \cdot \Delta$, resulta que:
+    \[
+        b' + a' \cdot s \approx \mu \cdot \Delta + e.
+    \]
+    Ou seja, a mensagem $\mu$ (com ruído $e$) agora está cifrada sob a nova chave $s$.
+\end{enumerate}
+
+\subsubsection{Pseudocódigo e implementação do key switch}
+
+\begin{algorithm}[H]
+\caption{Algoritmo de Troca de Chave (Key-Switching)}
+\label{alg:keyswitch}
+\DontPrintSemicolon
+
+\KwIn{
+    Criptograma $c = (a, b) \in \mathcal{R}_Q^2$, uma cifra $\RLWE_{s'}(\mu)$.\;
+    Chave de troca de chave $K_{s' \to s} = \{k_i = \RLWE_s(s' \cdot g_i)\}_{i=0}^{\ell-1}$.\;
+}
+\KwOut{
+    Criptograma $c' \in \mathcal{R}_Q^2$, uma cifra $\RLWE_{s}(\mu)$.
+}
+$(a_0, a_1, \dots, a_{\ell-1}) \leftarrow g^{-1}(a)$ \\
+$(a_{\text{new}}, b_{\text{new}}) \leftarrow (0, 0) \in \mathcal{R}_Q^2$.\\
+\For{$i \leftarrow 0$ \KwTo $\ell-1$}{
+    Seja $k_i = (c_i, d_i)$.\\
+    $(a_{\text{new}}, b_{\text{new}}) \leftarrow (a_{\text{new}} + a_i \cdot c_i, b_{\text{new}} + a_i \cdot d_i)$.\\
+}
+$a' \leftarrow -a_{\text{new}}$.\\
+$b' \leftarrow b - b_{\text{new}}$\\
+\Return{$c' = (a', b')$}
+\end{algorithm}
+
+É claro que a implementação deste algoritmo é bem mais simples na prática. A seguir um snippet de código que contém não só a
+implementação da troca de chave no RLWE como RGSW, com a única diferença é que temos que aplicar a diferença para as linhas 
+relevantes.
+
+\begin{minted}{python3}
+def key_switch_rlwe(ciphertext, K, base, B, q, N):
+    f = Zx(cyclotomic_polynomial(N))
+    Zqx = ZZ.quotient(q)['x'] 
+    Rq = Zqx.quotient(f)
+    
+    a, b = ciphertext[0], ciphertext[1]
+    ev_aK = vector(inv_g_poly(a, base, q, N)) * K 
+    
+    ev_aK = [Rq(ev_aK[0]), Rq(-ev_aK[1])]
+    return vector([-ev_aK[0], Rq(b) + Rq(ev_aK[1])])
+
+def key_switch_gsw(gsw, K, base, C): 
+    l, B, q, n = gsw.l, gsw.B, gsw.q, gsw.n
+    new_C = Matrix(gsw.Rq, 2* l, 2)
+
+    for i in range(l):
+        new_C[l+i] = key_switch_rlwe(C[l+i], K, base, B, q, n)
+        new_C[i] = gsw.inv_g_row_ciphertext(new_C[l+i]) * gsw.Ks
+
+    return new_C
+\end{minted}

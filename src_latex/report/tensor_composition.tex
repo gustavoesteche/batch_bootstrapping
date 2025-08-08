@@ -1,0 +1,175 @@
+\section{Composição de Anéis}
+\subsection{Objetivo}
+A ideia principal é entender como representar elementos em um anel maior usando de elementos em anéis menores para computação mais rápida, e então implementar/testar algumas propriedades derivadas.   
+
+\subsection{Ferramentas Matemáticas}
+
+\subsubsection{Definições}
+Para o nosso problema, considere um inteiro $m$, então será analisado como compor o anel quociente $R_{m} = \mathbb{Q}[X]/ <\Phi_{m}(X)>$ utilizando anéis quocientes menores. 
+Observe que este anel quociente também é um corpo, já que $\mathbb{Q}$ é um corpo, e por definição toda raiz de $\Phi_m(x)$ está em $\mathbb{C}$, então
+$\Phi_m(x)$ é um polinômio irredutível sobre $\mathbb{Q}$, logo $R_{m} = \mathbb{Q}[X]/ <\Phi_{m}(X)>$ é um corpo. Outra definição útil é: seja $K_m$ a extensão de corpo tal que $K_m  = \mathbb{Q}(\zeta_m)$. É trivial ver que  $R_m \cong K_m$, pelo isomorfismo $X \mapsto \zeta_m$, portanto o desafio
+de decompor $R_m$ é essencialmente o mesmo que decompor $K_m$.
+
+\subsubsection{Base de Potências}
+A base de potências ou base canônica dos polinômios é a base trivial de polinômios, podendo assim ser usada para definir os elementos no anel quociente $R_{m} = \mathbb{Q}[X]/ <\Phi_{m}(X)>$. Para qualquer inteiro $m$, a base pode ser escrita como $B = \{1, x, x^2, ..., x^{\phi(m)-1}\}$ e, é claro, cada elemento da base é linearmente independente e o 
+envoltório linear da base é igual a todos os possíveis elementos em $R_{m}$. Como $R_m \cong \mathbb{Q}(\zeta_m)$, a base de potências também pode ser vista como $\{1, \zeta_m, \zeta_m^2, ..., \zeta_m^{\phi(m)-1}\}$, 
+devido ao isomorfismo mencionado anteriormente.
+
+\subsubsection{Composição via produto tensorial e \textit{Powerful basis}}
+Seja $m$ um inteiro com fatoração em primos $m = \prod_{l} m_l$ onde cada $m_l$ é uma potência de primo. Conforme descrito em \cite{lyubashevsky2013}
+o corpo $K_m = \mathbb{Q}(\zeta_m)$ é isomorfo ao produto tensorial: 
+
+\begin{equation}
+    K_m \cong \bigotimes_l K_{m_l}
+\end{equation}
+
+De forma equivalente, em termos dos anéis polinomiais é possível vê-lo como
+
+\begin{equation}
+    K_m \cong \bigotimes_l \mathbb{Q}[X_l] / <\Phi_{m_l}(X_l)> 
+\end{equation}
+
+Adotando a interpretação polinomial de $K_m$ a partir da equação anterior, para fins de concretude, note que uma base natural sobre $\mathbb{Q}$ é o conjunto 
+de multinômios $\prod_l X_l^{j_l}$ para cada escolha de $0 \le j_l < \phi(m_l)$, e como $\phi(m) = \prod_l \phi(m_l)$ esta escolha pode ser feita.
+Este conjunto é chamado de \textit{"powerful" basis} de $K_m$.
+
+A \textit{powerful basis} $\vec{p}$ de $K_m = \mathbb{Q}(\zeta_m)$ pode ser definida como o produto tensorial das bases de potências(ou \textit{powerful}) $\vec{p_l}$ de cada $K_{m_l}$. Note
+que o conjunto de índices no tensor resultante do produto tensorial pode ser achatado, resultando em um tensor de \textit{rank} 1, conforme visto em \cite{lyubashevsky2013}.
+Entretanto, o que realmente importa no cenário proposto é como efetivamente realizar o produto tensorial entre os elementos dos anéis $R_{m_l}$.
+
+Agora, para uma descrição mais concreta de como realizar a composição, o produto tensorial externo atuará como uma multiplicação polinomial 
+e o isomorfismo que mapeia cada $X_l$ em $X$ será: $X_l \mapsto X^{m/m_l}$. Este isomorfismo pode parecer um tanto não natural, mas ao observar a raiz
+da unidade isso se torna mais natural, pois $\zeta_{m_l} = \zeta_m^{m/m_l}$. O mesmo procedimento pode ser feito para encontrar a mencionada
+\textit{powerful basis} achatada. Por exemplo, para $m = 15$, $p_3 = \{1,x_{3}^1\}$ e $p_5 = \{1,x_{5}^1, x_{5}^2, x_{5}^3\}$,
+depois de realizar os cálculos, a base resultante será $p = \{1, x^3, x^5, x^6, x^8, x^9, x^{11}, x^{14}\}$ mais uma vez confirmada pelo artigo \cite{lyubashevsky2013} após o isomorfismo $x \mapsto \zeta_m$. 
+
+\subsubsection{Decomposição do Anel}
+Na seção anterior descrevemos como efetuar a composição de elementos dos corpos $K_{m_l}$ em um elemento no corpo $K_m$.
+Portanto, seria natural tentar realizar o caminho inverso, encontrando uma forma explícita de decompor um elemento em $K_m$ nos seus correspondentes em cada $K_{m_l}$. 
+Mas acontece que não existe uma operação de produto tensorial "inversa" trivial. Isso pode ser visualizado pelo seguinte: sejam $A$ e $B$ duas matrizes e $\psi$ tal que $\psi = A \otimes B$. 
+Usando notação da soma de índices:
+
+\begin{equation}
+    \psi_{ijkl} = A_{ki} B_{jl}
+\end{equation}
+
+Usando qualquer $\lambda$ não-nulo no corpo no qual as operações estão definidas, temos $\psi_{ijkl} = (\lambda A_{ki}) (\lambda^{-1}B_{jl})$, portanto não há unicidade da solução. Alguém poderia argumentar que ao operar no anel dos inteiros,
+apenas $1_{R}$ teria um inverso, levando a apenas três representações. Mas ao invés disso, podemos propor um problema clássico de álgebra linear: Note que, como os valores em $\psi$ são arbitrários, temos $|\psi| = |A||B|$ elementos a serem representados,
+e apenas $|A| + |B|$ elementos de variáveis, então podemos até chegar a um caso degenerado, onde não há uma decomposição válida a ser proposta. Felizmente, este problema não parece ter aplicação no desenvolvimento do batch bootstrapping proposto,
+então por enquanto será ignorado.
+
+\subsection{Propriedades}
+
+A partir da composição por produto tensorial surgem algumas propriedades interessantes, como segue:
+
+\subsubsection{Propriedades de produto misto}
+Assuma que $K, L$ são extensões de corpo de $\mathbb{Q}$, e que $a \in K$, $b \in L$. Então o produto tensorial de corpos $K \otimes L$ é definido como o conjunto de todas as combinações $\mathbb{Q}$-lineares de tensores puros $a \otimes b$, onde o produto tensorial
+é bilinear em relação aos racionais, essas operações concebidas no produto tensorial de corpos devem satisfazer a propriedade de produto misto, i.e.,
+
+\begin{equation}
+    \label{eq:four_operations}
+    \begin{split}
+        (a_1 \otimes b) + (a_2 \otimes b) &= (a_1 + a_2) \otimes b \\
+        (a \otimes b_1) + (a \otimes b_2) &= a \otimes (b_1 + b_2) \\
+        e (a \otimes b) &= (ea) \otimes b = a \otimes (eb) \\
+        (a_1 \otimes b_1) (a_2 \otimes b_2) &= (a_1 a_2) \otimes (b_1 b_2)
+    \end{split}
+    \end{equation}
+    
+Observe que, como estamos lidando com os produtos tensoriais externos da seção anterior, todas essas propriedades devem se aplicar, por exemplo quando $K = R_{m_1}$ e $L = R_{m_2}$.
+
+\subsubsection{Homomorfismos de anéis (embeddings)}
+Como visto em \cite{lyubashevsky2013}, ao tomar $K_m \cong \bigotimes_l K_{m_l}$ decorre diretamente das definições que $\sigma$ é o produto tensorial
+dos \textit{cannonical embeddings} $\sigma^{(l)}$ de $K_{m_l}$, i.e.,
+
+\begin{equation}\label{eq:ring_embeddings}
+    \sigma(\otimes_l a_l) = \bigotimes_l \sigma^{(l)}(a_l)
+\end{equation}
+
+Isto pode ser melhor explicado pelo seguinte raciocínio: o resultado de realizar os homomorfismos canônicos dos aneis e então fazer o produto tensorial deve ser
+o mesmo que fazer primeiro o produto tensorial e depois o homomorfismo de anel.
+
+\subsubsection{Cálculo do traço}
+
+Seja $E$ uma extensão de corpo de $K$, e $a \in E$. Adicionalmente, $\forall i, 1 \leq i \leq [E:K]$, sejam $\sigma_i$ os automorfismos de $E$ que deixam os elementos em $K$ fixos. A definição de traço usada é
+\begin{equation}
+    Tr_{E/K}(a) = \sum_i \sigma_i(a)
+\end{equation}
+
+Em outras palavras, o traço é a soma de todos os conjugados de $a$.
+
+Agora, o objetivo será calcular o traço de um elemento em $K_m$ para $\mathbb{Q}$. Usando o produto tensorial, temos:
+
+\begin{equation}
+    Tr_{K_m/\mathbb{Q}}(\otimes_l a_l)  = \sum_i \sigma_i(\otimes_l a_l) 
+\end{equation}
+
+Agora, aplicando a propriedade anterior [\ref{eq:ring_embeddings}],  
+
+\begin{equation}
+    \sum_i \sigma_i(\otimes_l a_l)  = \sum_i \bigotimes_l \sigma_i^{(l)}(a_l)
+\end{equation}
+
+Usando as propriedades da operação tensorial 
+
+\begin{equation}
+    \sum_i \bigotimes_l \sigma_i^{(l)}(a_l) = \prod_l (\sum_i \sigma_i^{(l)}(a_l))
+\end{equation}
+
+como $\sigma_i^{(l)}(a_l)$ representa o \textit{cannonical embedding} do elemento $a_l$ em $K_{m_l}$ para $\mathbb{Q}$, a soma na equação representa o traço, ou seja,    
+ 
+\begin{equation}
+    \prod_l (\sum_i \sigma_i^{(l)}(a_l)) = \prod_l Tr_{K_{m_l}/\mathbb{Q}} (a_l)
+\end{equation}
+
+Assim, finalmente alcançamos a relação desejada: 
+
+\begin{equation}
+    \label{eq:trace_composition}
+    Tr_{K_m/\mathbb{Q}}(\otimes_l a_l) = \prod_l Tr_{K_{m_l}/\mathbb{Q}} (a_l)
+\end{equation}
+
+\subsection{Implementação e Testes}
+
+Segue a seguir, uma implementação da composição de anéis com o produto tensorial usando SageMath
+
+\begin{minted}{python3}
+    R = PolynomialRing(ZZ, 'x')
+
+    # Compose the polynomial in the original polynomial ring,
+    # performing the isomorfism and the multiplication
+    def compose_poly(factors_m:list, poly_m:list, m:int):
+    '''
+    Computes the polynomial in the original field
+    factors_m: A tuple list representing the prime power that divides m
+    poly_m[i]: the polynomial in the field K_{p_i ^m_i} that decomposes 
+    the original poly 
+    '''
+        poly = 1
+        for i in range(len(poly_m)):
+            poly = poly * poly_m[i](x^(m/(factors_m[i][0] ** factors_m[i][1])))
+
+        return R(poly) % R(cyclotomic_polynomial(m))
+\end{minted}
+
+Agora, usando a equação [\ref{eq:trace_composition}], aqui está uma implementação de como calcular o traço aproveitando a decomposição no SageMath
+
+\begin{minted}{python3}
+  R = PolynomialRing(ZZ, 'x')
+  # Compute the trace using the decomposed polynomials
+  def compose_trace(factors_m:list, poly_m:list):
+  '''
+  Computes Tr_{K_m/Q}(a) 
+  factors_m: A tuple list representing the prime power that divides m
+  poly_m[i]: the polynomial in the field K_{p_i ^m_i} that decomposes 
+  the original poly 
+  '''
+  trace = 1
+    for i in range(len(factors_m)):
+      trace = trace * 
+           fast_trace_pm_to_1(factors_m[i][0], factors_m[i][1], poly_m[i])
+      return trace
+\end{minted}
+
+Neste \href{https://github.com/gustavoesteche/ic-bootstraping}{github} há uma classe que testa as propriedades em [\ref{eq:four_operations}] e a propriedade 
+(\ref{eq:trace_composition}), usando SageMath. Todos os testes consistem em computar o lado esquerdo e o lado direito das equações e verificar que são iguais.

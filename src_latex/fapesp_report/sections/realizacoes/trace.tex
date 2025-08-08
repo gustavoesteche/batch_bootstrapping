@@ -1,0 +1,86 @@
+\subsection{Traço}
+Seja $K \subseteq L $ um extensão de corpo finito e $Aut_K(L)$ o subconjunto de automorfismos
+de $L$ que fixam elementos de $K$, ou seja, se $\sigma \in Aut_K(L)$ e $\alpha \in K$, logo $\sigma(\alpha) = \alpha$. Então o Traço de $L$ em $K$ de um elemento $a \in L$ é definido por 
+\begin{equation}
+    Tr_{L/K}(a) = \sum_{\sigma \in Aut_K(L)} \sigma(a)  
+\end{equation} 
+Então, computar o traço se resume a encontrar os automorfismos que fixam os elementos.
+
+Sendo $p$ um primo e $n \in \mathbb{Z}^{+}$, considere o anel ciclotômico  
+$R_{p^n} = \mathbb{Z}[x]/<\Phi_{p^n}(x)>$. Semelhante a seção anterior, este anel também pode ser escrito como $\mathbb{Z}(\zeta_{p^n})$, onde o isomorfismo é $x \mapsto \zeta_{p^n}$.
+
+Inicialmente, foi encontrado como computar o traço de um elemento $a$ entre os anéis $R_{p^n}$ e $R_{p^{n-1}}$, denotado como $Tr_{R_{p^n}/R_{p^{n-1}}}$.
+Observe que o problema foi definido sobre os corpos e não anéis, porém como o automorfismo respeita a estrutura do anel, portanto o traço permanece bem definido. Os automorfismos em anéis ciclotômicos são da forma $X \mapsto X^i$, então, para encontrar os automorfismos basta encontrar os expoentes que satisfazem a propriedade de fixação requerida. 
+Vamos separar em dois casos:
+
+\paragraph{Caso 1: $n=1$} 
+    Esta discussão é trivial, porque teremos apenas $\varphi(p) = p-1$
+    automorfismos, que serão definidos por todos os expoentes coprimos com $p$,
+    ou seja $[1,p-1]$. Logo, os automorfismos são $\sigma_i(X) = X^i$.
+
+\paragraph{Caso 2: $n>1$} 
+Definimos um conjunto de $\varphi(p^n)/\varphi(p^{n-1}) = p$ automorfismos do anel $\mathbb{Z}[x]/\langle \Phi_{p^n}(x) \rangle$ sobre $\mathbb{Z}[x]/\langle \Phi_{p^{n-1}}(x) \rangle$, dados por:
+\[
+\sigma_k(x) = x^{k p^{n-1} + 1}, \quad 0 \leq k \leq p-1.
+\]
+Se $g(x) \in R_{p^{n-1}}$, ou seja, $g(x) = \sum_{i=0}^{\varphi(p^{n-1})} b_i \zeta_{p^{n-1}}^i$. Usando $\zeta_{p^{n-1}} = \zeta_{p^n}^p$, $\sigma_k(g(x))$ pode ser escrito como:
+\[
+\sigma_k(g(x)) = \sum_i b_i x^{pi(k p^{n-1} + 1)} = \sum_i b_i x^{p i k p^{n-1}} x^{pi}.
+\]
+
+Como $x^{p i k p^{n-1}} = (x^{p^n})^{ik} \equiv 1 \mod \Phi_{p^n}(x)$, segue que $\sigma_k(g(x)) = g(x)$. Portanto, os automorfismos $\sigma_k$ \emph{fixam} o subanel $R_{p^{n-1}}$.
+
+Seja $f(x)$ um polinômio em $R_{p^n}$ escrito como 
+$
+f(x) = \sum_{i=0}^{\varphi(p^n)/p} x^{pi} \sum_{j=0}^{p-1} a_{ij} x^j.
+$ podemos simplificar a atuação do traço de $R_{p^n}$ para $R_{p^{n-1}}$:
+
+\[
+\sum_{k=0}^{p-1} \sigma_k(f(x)) = p \sum_{i=0}^{\varphi(p^n)/p} x^{pi} a_{i0}.
+\]
+Esse traço pode ser aplicado recursivamente por uma torre:
+$
+R_{p^n} \longrightarrow R_{p^{n-1}} \longrightarrow \cdots \longrightarrow \mathbb{Z},
+$
+permitindo computar traços intermediários até o corpo base, ou até o corpo necessário, operação implementada em SageMath.
+
+Ademais, foram obtidas expressões explícitas para os traços parciais $\mathrm{Tr}_{K/K_{12}}$ e $\mathrm{Tr}_{K/K_{13}}$, fundamentais para o \textit{framework} de \textit{batch bootstrapping} apresentado em \cite{lw23I}. Seja $K = K_1 \otimes K_2 \otimes K_3$ e $K' = \bigotimes_{l \neq q} K_l$, então, para $a = \bigotimes_l a_l \in K$, usando a equação [\ref{eq:ring_embeddings}] foi demonstrado que:
+
+\begin{equation}
+    \mathrm{Tr}_{K/K'} (a) = \left( \bigotimes_{l \neq q} a_l \right) \cdot \mathrm{Tr}_{K_q/\mathbb{Q}} (a_q)
+\end{equation}
+
+Essa fórmula permite computar o traço parcial removendo um dos fatores do produto tensorial de corpos, simplificando significativamente sua implementação algébrica, que foi usado para critério de confirmação da solução polinômial e pode ser utilizada no futuro para otimização da implementação proposta, foi implementada em SageMath.
+
+Em vias de fato, os tensores são uma das representações do que 
+na realidade é representado por um polinômio $f(x) \in K$. No desenvolvimento a seguir vamos tratar novamente do caso onde queremos eliminar um corpo do traço, ou seja,
+fixar os elementos dos outros corpos. Tome os mesmos corpos definidos anteriormente. Como $K$ é dado por um produto tensorial, para $f(x) \in K$ temos:  
+$$
+f(x) = \sum_i^{\phi(m1)-1} a_i x^{im_2m_3} \times \sum_j^{\phi(m2)-1} b_j x^{jm_1m_3} \times \sum_k^{\phi(m3)-1} c_i x^{km_1m_2}
+$$ 
+onde cada termo estava originalmente em $K_1,K_2, K_3$ respectivamente. Assuma sem perda de generalidade que queremos fixar os elementos dos dois primeiros corpos.
+logo, o automorfismo $a$ tem a forma: 
+$$
+ x^{a(im_2m_3 + jm_1m_3)} = x^{im_2m_3 + jm_1m_3}
+$$
+Então $a m_2 m_3 \equiv m_2 m_3 $ e $a m_1 m_3 \equiv m_1 m_3$, para isso $a = k \times m_1 m_2$. Porém, é importante que $a m_1 m_3 \not\equiv m_1 m_3$, portanto
+temos que remover esses múltiplos apropriadamente. A solução pode ser vista no seguinte pseudocódigo:
+
+\begin{algorithm}[H]
+\caption{Cálculo dos automorfismos}
+\KwIn{Inteiros $m$, $p$, $n$}
+\KwOut{Lista de automorfismos}
+
+$rest \gets \{\, i \in [0, p-1] \mid i \neq k \,\}$ \;
+$aut \gets \emptyset$ \;
+
+\For{$i \gets 0$ \KwTo $p^{n-1} - 1$}{
+    \ForEach{$j \in rest$}{
+        $a \gets (i \cdot p + j) \cdot m / p^n + 1$ \;
+        adiciona $a$ a $aut$\;
+    }
+}
+\Return $aut$
+\end{algorithm}
+
+Tais automorfismos são aplicados na definição de traço para seu cálculo na implementação. Esta função foi implementada em SageMath e C++.

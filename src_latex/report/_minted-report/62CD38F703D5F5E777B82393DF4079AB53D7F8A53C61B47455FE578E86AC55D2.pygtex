@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{n}{R} \PYG{o}{=} \PYG{n}{PolynomialRing}\PYG{p}{(}\PYG{n}{ZZ}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}x\PYGZsq{}}\PYG{p}{)}
+  \PYG{c+c1}{\PYGZsh{} Compute the trace using the decomposed polynomials}
+  \PYG{k}{def} \PYG{n+nf}{compose\PYGZus{}trace}\PYG{p}{(}\PYG{n}{factors\PYGZus{}m}\PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{,} \PYG{n}{poly\PYGZus{}m}\PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{):}
+  \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{  Computes Tr\PYGZus{}\PYGZob{}K\PYGZus{}m/Q\PYGZcb{}(a)}
+\PYG{l+s+sd}{  factors\PYGZus{}m: A tuple list representing the prime power that divides m}
+\PYG{l+s+sd}{  poly\PYGZus{}m[i]: the polynomial in the field K\PYGZus{}\PYGZob{}p\PYGZus{}i \PYGZca{}m\PYGZus{}i\PYGZcb{} that decomposes}
+\PYG{l+s+sd}{  the original poly}
+\PYG{l+s+sd}{  \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+  \PYG{n}{trace} \PYG{o}{=} \PYG{l+m+mi}{1}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{factors\PYGZus{}m}\PYG{p}{)):}
+      \PYG{n}{trace} \PYG{o}{=} \PYG{n}{trace} \PYG{o}{*}
+           \PYG{n}{fast\PYGZus{}trace\PYGZus{}pm\PYGZus{}to\PYGZus{}1}\PYG{p}{(}\PYG{n}{factors\PYGZus{}m}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{factors\PYGZus{}m}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{poly\PYGZus{}m}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+      \PYG{k}{return} \PYG{n}{trace}
+\end{Verbatim}

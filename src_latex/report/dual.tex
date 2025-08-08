@@ -1,0 +1,137 @@
+\section{Duais}
+
+\subsection{Introdução}
+No contexto da álgebra linear se temos um espaço vetorial $V$ com uma base $B = \{b_i\}$ o espaço dual $V^v$ é definido como o conjunto de todos os funcionais lineares em $V$. Um funcional linear 
+é uma aplicação linear $f: V \to \mathbb{F}$, onde $\mathbb{F}$ é o corpo sobre o qual $V$ está definido. O próprio espaço dual é um espaço vetorial e a base dual é definida
+de tal forma que $b^v_i(b_j) = \delta_{ij}$, o delta de Kronecker.
+
+Agora, considerando o cenário em \cite{lw23I}, seja $K = \mathbb{Q}(\zeta_m)$ onde $m \in \mathbb{Z}^+$. 
+Para qualquer base $B = \{b_j\}$ de $K$ sobre $\mathbb{Q}$, denotamos sua base dual por $B^v = \{b^v_j\}$, a qual é definida 
+por:
+
+\begin{equation}
+    \label{eq:dual_basis_def}
+    Tr(b_i b^v_j) = \delta_{ij}
+\end{equation}
+
+Assim, descrevendo $a \in K$ como $a = \sum_i a_i b_i$, tem-se o fato de que: 
+
+\begin{equation}
+    a b^v_j = \sum_i a_i b_i b^v_j
+\end{equation}
+
+Aplicando o traço em ambos os lados,
+
+\begin{equation}
+    Tr(a b^v_j) = Tr( \sum_i a_i b_i b^v_j)  = \sum_i a_i Tr(b_i b^v_j))
+\end{equation}
+
+Agora, usando a definição $Tr(b_i b^v_j) = \delta_{ij}$,
+
+\begin{equation}
+    a_j = Tr(a b^v_j)
+\end{equation}
+
+Nos artigos \cite{lw23I} e \cite{lw23II}, utiliza-se desses elementos da base dual de $K$ para empacotar textos simples e criptogramas,
+urge então a necessidade de implementar o cálculo de uma base dual dado uma base bem definida.
+
+\subsection{Solução Teórica}
+
+Neste trabalho vamos utilizar a base de potências canônica, então o foco torna-se encontrar a base dual canônica de $\frac{\mathbb{Q}[X]}{<\Phi_p^n(x)>}$ onde $p$ é primo e $n \in \mathbb{Z}^+$. 
+Como a base canônica vai ser $[x^0,x^1, \dots x^{\varphi(p^n)-1}]$, basta encontrar $\forall i, 0 < i < \varphi(p^n)$ um $b_i^v$ que satisfaça (\ref{eq:dual_basis_def}).
+
+Inicialmente note a seguinte propriedade sobre traços até os inteiros presente em \cite{lyubashevsky2013}
+
+\begin{equation}
+    \mathrm{Tr}(x^j) =
+    \begin{cases}
+    \varphi(p^n) & \text{se } j \equiv 0 \pmod{p^n} \text{ (I)} \\
+    -p^{n-1} & \text{se } j \equiv 0 \pmod{p^{n-1}} \text{ e } j \not\equiv 0 \pmod{p^n} \text{ (II)}\\
+    0 & \text{caso contrário.} \text{ (III)}
+    \end{cases}
+    \label{trace_presults}
+\end{equation}
+
+Seja então, um $k_i = x^{p^n - i} - x^{p^{n-1} - i}$, perceba que:
+\begin{equation}
+    \mathrm{Tr}(x^i*k_i) = \mathrm{Tr}(x^{p^n} - x^{p^{n-1}}) = p^n   
+\end{equation}
+
+Logo, $\mathrm{Tr}(x^i*k_i) / p^n = 1$. Porém, também é necessário avaliar se nas outras potências
+o traço encontrado é $0$, então
+
+\begin{equation}
+    \mathrm{Tr}(x^j*k_i) = \mathrm{Tr}(x^{p^n- i + j}) - \mathrm{Tr}(x^{p^{n-1} - i + j})
+\end{equation}
+
+Vamos analisar como os 3 casos postos em (\ref{trace_presults}) sobre $j-i$ impactam no resultado:
+\begin{itemize}
+    \item[1.] $j-i \equiv 0 \pmod{p^n}$, note que esse caso só ocorre quando $j = i$, que já foi analisado e tem o resultado desejado. 
+    \item[2.] $j-i \equiv 0 \pmod{p^{n-1}} \text{ e } j-i \not\equiv 0 \pmod{p^n}$, pode ser dividido em dois casos
+    \begin{itemize}
+        \item[2.1] $j-i + p^{n-1} \neq 0$ \\
+        Isso implica que ambos os traços satisfazem a condição (II) como são iguais, se cancelam resultando no resultado desejado, zero. 
+        \item[2.2] $j-i + p^{n-1} = 0$ \\
+        Único caso problemático, visto que o segundo caso vai passar a satisfazer a condição (I) enquanto o primeira vai satisfazer
+        a condição (II), então o valor do traço calculado ser $-p^n$.
+    \end{itemize} 
+    \item[3.] caso contrário, ambos os traço vão ser $0$ e a condição será satisfeita.
+\end{itemize}
+
+Note que o único caso problemático onde $k_i$ não funciona, atinge os pares da forma $(i, i+ p^{n-1})$.
+Uma solução trivial então é substituir $k_{i+ p^{n-1}}$ por $k_{i+ p^{n-1}}:=k_{i+ p^{n-1}} + k_i$. Vamos analisar
+o impacto dessa troca em todos os elementos $x^j$ da base:
+\begin{itemize}
+    \item $j \notin (i, i+ p^{n-1})$ a corretude permanece já que, $\mathrm{Tr}(x^j(k_i + k_{i+ p^{n-1}})) = 0$
+    \item $j = i$, o traço entre $\mathrm{Tr}(x^ik_{i+ p^{n-1}})$ se torna $0$ como desejado\\
+    $\mathrm{Tr}(x^i(k_i + k_{i+ p^{n-1}})) = \mathrm{Tr}(x^ik_i) + \mathrm{Tr}(x^ik_{i+ p^{n-1}}) = p^n - p^n = 0$
+    \item $j = i + p^{n-1}$, o traço mantém o valor desejado já que:\\
+    $\mathrm{Tr}(x^{i+ p^{n-1}}(k_i + k_{i+ p^{n-1}})) = \mathrm{Tr}(x^{i+ p^{n-1}}(k_{i+ p^{n-1}})) = 1$
+\end{itemize}
+
+Finalmente, basta utilizar o seguinte pseudocódigo para encontrar a base dual canônica:
+
+\begin{algorithm}[H]
+    \caption{\texttt{canon\_dbasis(p, n)}}
+    \KwIn{Primo $p$, inteiro $n \geq 1$}
+    \KwOut{Base dual canônica dividida de $p^n$}
+    
+    $f \gets$ polinômio ciclotômico $\Phi_{p^n}(x)$ em $\mathbb{Z} [x]$ \\
+    $l \gets$ vetor de tamanho $\varphi(p^n)$ em $\mathbb{Q} [x]$, entradas inicialmente $0$ \\
+    \For{$i \gets 0$ \KwTo $p^{n-1} - 1$}{
+        $k_{i} \gets (x^{p^n - i} - x^{p^{n-1} - i}) \bmod f$ no anel $\mathbb{Z}[x]/(f)$ \\
+        $l[i] \gets k_i$ 
+    }
+    \For{$i \gets p^{n-1}$ \KwTo $\varphi(p^n) - 1$}{
+        $l[i] \gets (l[i] + l[i - p^{n-1}])/p^n$ 
+    }
+    \Return{$l$}
+    
+    \end{algorithm}
+
+Pela linha 7 é possível inferir uma propriedade da base que será necessária para o futuro, as normas de cada termo $l[i], l[i-p^{n-1}]$
+são $||p-1||$, portanto a norma infinita da base calculada é $2(p-1)/p^n$.
+
+\subsection{Implementação}
+
+Traduzindo o pseudocódigo para SageMath com algumas modificações, obtêm-se:
+
+\begin{minted}{python3}
+def canon_dbasis(p, m):
+    f = Zx(cyclotomic_polynomial(p**m))
+    l = vector(Qx, [0]*euler_phi(p**m))
+    for i in range(p**(m-1)):
+        p_magic = (p**(m-1) - i) % (p**m)
+        fj = (Zx(x**(p**m - i) - x**p_magic) % f)
+        l[i] = fj
+    
+    for i in range(p**(m-1), euler_phi(p**m)):
+        p_magic = (p**(m-1) - i) % (p**m)
+        fj = (Zx(x**(p**m - i) - x**p_magic) % f)
+        fj = fj + l[i - p**(m-1)]
+        l[i] = fj
+        
+    return l/(p**m)
+\end{minted}
+
+Para ver mais da implementação e testes, verifique \href{https://github.com/gustavoesteche/ic-bootstraping/tree/main/src_sage/dual}{aqui}.

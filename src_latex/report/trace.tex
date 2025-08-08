@@ -1,0 +1,346 @@
+\section{Traço}
+
+\subsection{Descrição do problema}
+
+Seja $K \subseteq L $ um extensão de corpo finito e $Aut_K(L)$ o subconjunto de automorfismos
+de $L$ que fixam elementos de $K$, ou seja, se $\sigma \in Aut_K(L)$ e $\alpha \in K$, logo $\sigma(\alpha) = \alpha$.
+Outra notação para $\sigma$ utilizada sera $\sigma : L \hookrightarrow K$. Então o Traço de $L$ em $K$ de um elemento
+$a \in L$ é definido por 
+
+\begin{equation}
+    Tr_{L/K}(a) = \sum_{\sigma \in Aut_K(L)} \sigma(a)  
+\end{equation}
+
+Agora se torna necessário definir o tipo de anel e corpo utilizado no \textit{framework} proposto.  
+Sendo $p$ um primo e $n \in \mathbb{Z}^{+}$, considere o seguinte anel quociente:
+
+\begin{equation}
+    R_{p^n} = \frac{ \mathbb{Z}[x]}{<\Phi_{p^n}(x)>}
+\end{equation}
+
+Note que esse anel também pode ser escrito como $\mathbb{Z}(\zeta_{p^n})$, onde o isomorfismo é
+visto claramente como $\zeta_{p^n} = x$.
+
+O objetivo inicial é computar o traço de um elemento $a$ entre os anéis $R_{p^n}$ e $R_{p^{n-1}}$, denotado como $Tr_{R_{p^n}/R_{p^{n-1}}}$ (\href{https://dec41.user.srcf.net/h/II_M/galois_theory/4_2}{fonte} sobre o problema).
+Note que o problema foi definido sobre os corpos e não anéis, porém como o automorfismo respeita a estrutura do anel, o traço permanece bem definido.
+Como dito anteriormente, basta computar a soma de todos os automorfismos de $R_{p^n}$ que fixam os elementos de $R_{p^{n-1}}$, então resolver o problema se resume a encontrar os automorfismos.
+
+\subsection{Solução teórica}
+Os automorfismos em anéis polinômiais são da forma $X \mapsto X^i$, então para encontrar os automorfismos basta encontrar os expoentes que satisfazem a propriedade de fixação requerida. 
+Outro ponto importante a ser mencionado antes de se iniciar é que a quantidade de operações 
+para encontrar todos os expoentes por força bruta ou por crivo (no caso dos expoentes serem inteiros
+ coprimos), e depois aplicar o automorfismo de expoentes, é computacionalmente custoso, então uma determinação matemática é muito bem-vinda. 
+Para facilitar determinação dos automorfismos, é interessante separar entre dois casos: quando o expoente é $1$ e quando não é.
+
+\subsubsection{Computando o traço para $n=1$}
+Esta discussão é mais simples, uma vez que computar o traço de $R_{p}/\mathbb{Z}$ é trivial, porque teremos apenas $\varphi(p) = p-1$
+automorfismos, que serão definidos por todos os expoentes coprimos com $p$, ou seja $[1,p-1]$. Assim, considerando os automorfismos $\sigma_i(X) = X^i$,
+o traço é calculado por:
+
+\begin{equation}
+    Tr_{R_{p}/\mathbb{Z}} (a) = \sum_{i=0}^{p-1} \sigma_i(a)
+    \label{eq:trace_result_m1}
+\end{equation}
+
+\subsubsection{Computando o traço para $n>1$}
+É fácil verificar que devemos ter $\varphi(p^n)/\varphi(p^{n-1}) = p$ automorfismos de um anel para o outro, e é claro que precisamos encontrar os automorfismos
+que isolam todos os expoentes múltiplos de $p$ para que se movam para o corpo apropriado (ou, neste caso, anel). Assim,
+agora é necessário definir o grupo de automorfismos que possui esse efeito. Vamos provar que os $p$ automorfismos para $n>1$, na
+situação descrita são
+
+\begin{equation}
+    \sigma_k(x) = x^{k p^{n-1} + 1}, 0 \leq k \leq p-1
+    \label{def_aut}
+\end{equation}
+
+Então, se $f(x) \in \frac{\mathbb{Z}[x]}{<\Phi_{p^n}(x)>}$, então temos que $f(x) = \sum_{i=0}^{\varphi(p^n)-1} a_i x^i$ que pode ser escrito como $f(x) = \sum_{i=0}^{\varphi(p^n)/p} 
+\sum_{j=0}^{p-1} a_{ij} x^{pi + j}$, então
+
+\begin{equation}
+    f(x) = \sum_{i=0}^{\varphi(p^n)/p} x^{pi} \sum_{j=0}^{p-1} a_{ij} x^{j}
+\end{equation}
+
+Agora podemos aplicar os automorfismos ao polinômio, levando a:
+
+\begin{equation}
+    \sigma_k(f(x)) = \sum_{i=0}^{\varphi(p^n)/p} x^{pi(k p^{n-1} + 1)} \sum_{j=0}^{p-1} a_{ij} x^{j k p^{n-1} + j}
+\end{equation}
+
+Observando o primeiro expoente, temos $kip^n + pi$, mas como a operação está no anel e $x^{kip^n} \equiv 1 \, mod (\Phi_{p^n}(x))$, esse expoente torna-se $pi$. Assim, o automorfismo $k$ torna-se:
+
+\begin{equation}
+    \sigma_k(f(x)) = \sum_{i=0}^{\varphi(p^n)/p} x^{pi} \sum_{j=0}^{p-1} a_{ij} x^j x^{j k p^{n-1}}
+    \label{automorphism_1}
+\end{equation}
+
+Note que $R_{p^{n}} \simeq \mathbb{Z}(\zeta_{p^{n}})$ e $R_{p^{n-1}} \simeq \mathbb{Z}(\zeta_{p^{n-1}})$ e pela definição de raiz da unidade temos que
+$\zeta_{p^{n-1}} = \zeta_{p^{n}}^p$. Dessa forma, $\forall g(x) \in R_{p^{n-1}}$ temos:
+
+\begin{equation}
+    g(x) = \sum_{i=0}^{\varphi(p^{n-1})} b_i \zeta_{p^{n-1}}^i
+\end{equation}
+
+Substituindo pelas relações mencionadas,
+
+\begin{equation}
+    g(x) = \sum_{i=0}^{\varphi(p^{n})/p} b_i x^{pi}
+\end{equation}
+
+Finalmente, utilizando a relação (\ref{automorphism_1}) temos que $\sigma_k(g(x)) = g(x)$, provando que 
+os automorfismos definidos em (\ref{def_aut}) são os automorfismos que fixam $R_{p^{n}}$ em $R_{p^{n-1}}$. Com os automorfismos devidamente 
+definidos, procede-se ao cálculo do traço, realizando-se a soma sobre todos os $p$ possíveis automorfismos.
+
+\begin{equation}
+    \sum_{k=0}^{p-1} \sigma_k(f(x)) = \sum_{i=0}^{\varphi(p^n)/p} x^{pi} \sum_{j=0}^{p-1} a_{ij} x^j \sum_{k=0}^{p-1} x^{j k p^{n-1}}
+\end{equation}
+
+Perceba que é uma boa ideia separar o caso $j=0$ do restante, para selecionar apenas os expoentes múltiplos de $p$ e também garantir que a última soma seja definida por uma série geométrica.
+
+\begin{equation}
+    \sum_{k=0}^{p-1} \sigma_k(f(x)) = \sum_{i=0}^{\varphi(p^n)/p} x^{pi} \sum_{j=1}^{p-1} a_{ij} x^j \sum_{k=0}^{p-1} x^{j k p^{n-1}} + 
+                                                        \sum_{i=0}^{\varphi(p^n)/p} x^{pi} a_{i0} \sum_{k=0}^{p-1} 1
+\end{equation}
+
+Agora, foquemos na soma da série geométrica, $\sum_{k=0}^{p-1} x^{j k p^{n-1}} = \frac{x^{j p^{n}} - 1}{x^{j p^{n-1}} -1}$, mas note a seguinte propriedade dos polinômios ciclotômicos: $\prod_{d|n} \Phi_d(x) = x^n - 1$. Então,
+
+\begin{equation}
+    \sum_{k=0}^{p-1} x^{j k p^{m-1}} =\frac{x^{j p^{n}} - 1}{x^{j p^{n-1}} -1} = \frac{\prod_{d|j p^{n}} \Phi_d(x)}{\prod_{d|j p^{n-1}} \Phi_d(x)}
+\end{equation}
+
+Como $p^n$ divide $jp^n$ e não divide $jp^{n-1}$, a soma $\sum_{k=0}^{p-1} x^{j k p^{n-1}}$ é um múltiplo de $\Phi_{p^n}(x)$, logo
+$\sum_{k=0}^{p-1} x^{j k p^{n-1}} = 0$ no anel $\frac{\mathbb{Z}[x]}{<\Phi_{p^n}(x)>}$. Assim, a soma dos automorfismos é:
+
+\begin{equation}
+    \sum_{k=0}^{p-1} \sigma_k(f(x)) = \sum_{i=0}^{\varphi(p^n)/p} x^{pi} a_{i0} \sum_{k=0}^{p-1} 1 = p \sum_{i=0}^{\varphi(p^n)/p} x^{pi} a_{i0}
+\label{eq:trace_result}
+\end{equation}
+
+Se necessário podemos visualizar o polinômio resultante como um polinômio em $R_{p^{n}}$ ou em $R_{p^{n-1}}$ com uma base diferente, no segundo caso basta apenas aplicar o mapeamento
+$X \mapsto Y^{1/p}$ ou $\zeta_{p^n}^p \mapsto \zeta_{p^{n-1}}$, e verificar o resultado no anel $R_{p^{n-1}}$. 
+Uma propriedade interessante dos anéis escolhidos é a possibilidade de calcular o traço através de uma torre de traços. Ao invés de realizar traço direto de $R_{p^{n}}/\mathbb{Z}$, 
+é possível realizar o traço entre $R_{p^{n}} / R_{p^{n-1}} / ... / \mathbb{Z}$. Como o cálculo do traço foi discutido, 
+vamos implementar o traço usando a definição da soma dos $p$ automorfismos e testar se a implementação funciona conforme a solução matemática encontrada em (\ref{eq:trace_result}).
+
+\subsection{Solução computacional usando SageMath}
+
+Primeiro, a implementação trivial para um caso geral $R_{m}$ até $\mathbb{Z}$:
+
+\begin{minted}{python}
+Zx = PolynomialRing(ZZ, 'x')
+
+def trivial_trace_m_to_1(poly, m):
+    '''Computa o traço do anel Z[x]/phi_m(x) 
+    para os inteiros, somando todos os 
+    automorfismos definidos pelos expoentes 
+    coprimos com m.'''
+    f = cyclotomic_polynomial(m)
+    coprimes = [x for x in range(1, m) if gcd(x, m) == 1]
+
+    response = Zx(0)
+    for i in coprimes:
+        term = Zx(poly(x=x^i)) % f
+        response = response + term
+    return response
+\end{minted}
+
+Somando todos os automorfismos de expoentes coprimos para computar o traço.
+
+Agora, vamos à implementação da soma dos automorfismos e a abordagem otimizada, que leva em conta o resultado teórico.
+
+\newpage 
+
+\begin{minted}{python}
+def trace_pm_to_pm_1(p:int, m:int, poly):
+    '''Computa o traço do anel Z[x]/phi_p^m(x) para
+    o anel Z[x]/phi_p^(m-1)(x)'''    
+    f = Zx(cyclotomic_polynomial(p^m))
+    response = Zx(0)
+    
+    if(m == 1):
+        for i in range(1,p):
+            response = response + Zx(poly(x=x^(i))) % f 
+    else:    
+        for i in range(p):
+            response = response 
+                    + Zx(poly(x=x^(i*(p^(m-1)) + 1))) % f 
+
+        response = Zx(response(x=x^(1/p)))
+
+    return response
+
+def fast_trace_pm_to_pm_1(p, m, poly):
+    '''Computa o traço de forma mais eficiente do anel 
+    Z[x]/phi_p^m(x) para o anel Z[x]/phi_p^(m-1)(x)''' 
+    f = Zx(cyclotomic_polynomial(p ** m) )
+
+    response = Zx(0)
+    if(m == 1):
+        for i in range(1,p):
+            response = response + Zx(poly(x=x^(i))) % f 
+    else:
+        for i in range(0, poly.degree()+1, p):
+            response = Zx(response + Zx(poly[i] * p * x^i)) % f
+
+        response = Zx(response(x=x^(1/p)))
+    return response
+\end{minted}
+
+Como pode ser visto, ambos os códigos filtram os expoentes do polinômio que são coprimos a $p$ e os multiplicam por $p$ quando
+$m>1$, além de computar a soma dos automorfismos (\ref{eq:trace_result_m1}) quando $m=1$. Também é interessante mencionar o método de torre para o cálculo do traço de $R_{p^m}$ para $\mathbb{Z}$, 
+aqui está a implementação usando ambas as funções descritas anteriormente.
+
+\newpage
+
+\begin{minted}{python}
+
+def trace_pm_to_1(p, m, poly):
+    '''Computa o traço do anel Z[x]/phi_p^m(x) para
+    os inteiros'''   
+    response = poly
+    for i in range(m, 0, -1):
+        response = trace_pm_to_pm_1(p, i, response)
+    
+    return response
+
+def fast_trace_pm_to_1(p, m, poly):
+    '''Computa o traço mais eficientemente do anel 
+    Z[x]/phi_p^m(x) para os inteiros'''   
+    response = poly
+    for i in range(m, 0, -1):
+        response = fast_trace_pm_to_pm_1(p, i, response)
+
+    return response
+
+\end{minted}
+
+Como é possível notar, ambas as abordagens diferem apenas por qual função é aplicada para realizar
+o traço entre $R_{p^n}$ e $R_{p^{n-1}}$. Além disso, note que a abordagem de torre tem uma redução substancial
+de complexidade, para abordagem direta o traço de $R_{p^n}/\mathbb{Z}$ tem complexidade $O(\varphi(p^n)) \approx O(p^n)$
+enquanto a abordagem em torre $O(\sum_{i = 0}^{n} \frac{\varphi(p^i)}{\varphi(p^{i-1})}) = O(pn - 1) \approx O(pn)$, diferença 
+essa que pode ser observada na prática até com pequenos valores de n.
+
+\subsection{Traços $\mathrm{Tr}_{K/K_{13}}$ e $\mathrm{Tr}_{K/K_{12}}$}
+
+No contexto do artigo em que o \textit{batch bootstrapping} é proposto \cite{lw23I}, consideramos, para cada $i \in \{1, 2, 3\}$, um corpo 
+$K_i = \frac{\mathbb{Q}[x]}{\langle \Phi_{p_i^{n_i}}(x) \rangle}$, 
+em que $p_i$ são primos distintos, ou seja, $p_1 \neq p_2 \neq p_3$, e $n_i \in \mathbb{Z}^+$. 
+Considere por $R_i$ o anel de inteiros do corpo $K_i$. No \textit{framework} proposto a opera-se com 
+elementos em $K = K_1 \otimes K_2 \otimes K_3$, e é necessário efetuar traços em $\mathrm{Tr}_{K/K_{12}}$ e
+$\mathrm{Tr}_{K/K_{13}}$, onde $K_{13} = K_1 \otimes K_3$ e $K_{12} = K_1 \otimes K_2$. Esta seção tem por
+objetivo desenvolver primeiramente uma abordagem tensorial para melhor compreensão dos objetos e depois tratar dos elementos
+diretamente em $K$. 
+
+
+\subsubsection{Definições do Problema}
+
+
+Sejam os corpos $K, K_1, K_2, K_3$ e seus respectivos anéis de inteiros tais como definidos no parágrafo anterior. 
+No \textit{framework} proposto cada criptograma também carrega consigo um modo, e quando uma operação entre dois criptogramas é realizada  
+temos um resultado que depende da aplicação de $Tr_{K/K_{12}}$ ou $Tr_{K/K_{13}}$. Para simplificação, trataremos na implementação o $mode = 2$ para o primeiro caso 
+e $mode = 1$ para o segundo, respectivamente. Para resolver tal problema, vamos resolver o problema geral de computar o traço quando se \textit{remove} apenas um corpo do produto tensorial de corpos.
+
+\subsubsection{Solução Teórica em Tensores}
+
+Seja $K = \bigotimes_l K_l$ e $K' = \bigotimes_{l, l \neq q} K_l$. O problema é calcular o traço entre $K/K'$ do elemento $a = \bigotimes_l a_l \in K$.
+Usando a definição de traço, obtemos
+
+\begin{equation}
+    Tr_{K/K'} (a) = \sum_i \sigma_i(a) = \sum_i \sigma_i^{(l)}(\bigotimes_l a_l)  
+\end{equation}
+
+Ao usar a propriedade dos \textit{cannonical embeddings}, temos 
+
+\begin{equation}
+    \sum_i \sigma_i^{(l)}(\bigotimes_l a_l) = \sum_i \bigotimes_l \sigma_i^{(l)}( a_l) =  \sum_i (\bigotimes_{l, l \neq q} \sigma_i^{(l)}(a_l) \otimes \sigma_i^{(q)}(a_q))
+\end{equation}
+
+Agora, usando a propriedade de produto misto e que um homomorfismo sempre mapeia as identidades, podemos ver isso como
+
+\begin{equation}
+    \sum_i \sigma_i^{(l)}(\bigotimes_l a_l) = \sum_i ( (\bigotimes_{l, l \neq q} \sigma_i^{(l)}(a_l) \otimes 1_{K_q}) \sigma_i^{(q)}(a_q))
+\end{equation}
+
+Como o produto tensorial dos \textit{cannonical embeddings} $\bigotimes_{l} \sigma_i^{(l)}(a_l)$ deve fixar o elemento no corpo $K'$ por definição, temos que 
+$\bigotimes_{l, l \neq q} \sigma_i^{(l)}(a_l) \otimes 1_{K_q} = (\bigotimes_{l, l \neq q}a_l)$. Substituindo isso na equação:  
+
+\begin{equation}
+    Tr_{K/K'} (a) = (\bigotimes_{l, l \neq q}a_l) (\sum_i \sigma_i^{(q)}(a_q))
+\end{equation}
+
+Como $Tr_{K_q/\mathbb{Q}} = (\sum_i \sigma_i^{(q)}(a_q))$ pela definição de traço, obtemos a relação desejada de 
+
+\begin{equation}
+    \label{eq:mix_trace}
+    Tr_{K/K'} (a) = (\bigotimes_{l, l \neq q}a_l) (Tr_{K_q/\mathbb{Q}} (a_q))
+\end{equation}
+
+Um breve comentário é necessário para justificar como a troca do corpo $K$ pelo anel de inteiros correspondente $R$ não interfere nas relações mostradas, a única propriedade faltante no anel de inteiros é a ausência de inversos multiplicativos para todo elemento não-nulo, propriedade que não é utilizada nas demonstrações.
+
+\subsubsection{Solução Teórica em Polinômios}
+Em vias de fato, os tensores são apenas uma representação mais amigável do que 
+na realidade é representado por um polinômio $f(x) \in K$. No desenvolvimento a seguir vamos tratar novamente do caso onde queremos eliminar um corpo do traço, ou seja,
+fixar os elementos dos outros corpos.
+Tome os mesmos corpos definidos anteriormente. Como $K$ é dado por um produto tensorial, para $f(x) \in K$ temos:  
+$$
+f(x) = \sum_i^{\phi(m1)-1} a_i x^{im_2m_3} \times \sum_j^{\phi(m2)-1} b_j x^{jm_1m_3} \times \sum_k^{\phi(m3)-1} c_i x^{km_1m_2}
+$$ 
+
+onde cada termo estava originalmente em $K_1,K_2, K_3$ respectivamente. Assuma sem perda de generalidade que queremos fixar os elementos dos dois primeiros corpos.
+logo, o automorfismo $a$ tem a forma: 
+$$
+ x^{a(im_2m_3 + jm_1m_3)} = x^{im_2m_3 + jm_1m_3}
+$$
+Então $a m_2 m_3 \equiv m_2 m_3 $ e $a m_1 m_3 \equiv m_1 m_3$, para isso $a = k \times m_1 m_2$. Porém, é importante que $a m_1 m_3 \not\equiv m_1 m_3$, portanto
+temos que remover esses múltiplos apropriadamente. A solução pode ser vista na função \textit{find\_aut} da seção seguinte.
+
+\subsubsection{Implementação em SageMath}
+
+Existem duas funções, uma para um cenário mais geral e outra que já trata da avaliação do traço dependendo do modo, apresento apenas a mais geral.
+
+\begin{minted}{python3}
+def trace_Rr1_to_R(poly1, p1, m1, poly_m, index = 0):
+    '''
+    Computes Tr_{Rr1/R} based on the index
+    '''
+    trace = fast_trace_pm_to_1(p1, m1, poly1)
+
+    trace_res = []
+    for poly in poly_m:
+        trace_res.append(poly)
+
+    trace_res[index] = trace_res[index] * trace 
+    return trace_res
+\end{minted}
+
+Para o caso mais relevante da aplicação do traço em polinômios, a implementação mais compreensível pode ser resumida a encontrar os automorfismos definidos 
+e computar sua soma. \newpage
+\begin{minted}{python3}
+def find_aut(m, p, n):
+    mi = p ** n
+    fator = m/mi
+    
+    k = p-(fator % p).inverse_mod(p)
+    rest = [i for i in range(p) if i!=k]
+    p_power = mi//p
+    aut = [(i*p + j)*fator+1 for i in range(p_power) for j in rest]
+    return aut
+
+def generic_trace(poly, m, p, n):
+    m_i = p ** n 
+    factor = m / m_i
+    f = Zx(cyclotomic_polynomial(m))
+    auto = find_aut(m, p, n) 
+    ans = Zx(0)
+    for i in auto:
+        ans = ans + (Zx(poly(x=x^i)) % f)
+    return ans
+\end{minted}
+
+Além disso, no \href{https://github.com/gustavoesteche/ic-bootstraping}{github} há vários testes feitos para as implementações, onde utiliza-se a propriedade de "torre" dos traços":
+
+\begin{equation}
+    Tr_{K/\mathbb{Q}} (a) = Tr_{K'/\mathbb{Q}}(Tr_{K/K'} (a))
+\end{equation}
+
+É possível calcular cada etapa da torre e comparar entre a abordagem tensorial e a polinomial e verificar sua igualdade. No final da torre ainda é possível
+verificar sua igualdade com a alternativa geral, dando mais robustez a implementação.

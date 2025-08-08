@@ -1,0 +1,21 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\PYG{k}{def} \PYG{n+nf}{trace\PYGZus{}pm\PYGZus{}to\PYGZus{}1}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{m}\PYG{p}{,} \PYG{n}{poly}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Computa o traço do anel Z[x]/phi\PYGZus{}p\PYGZca{}m(x) para}
+\PYG{l+s+sd}{    os inteiros\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{response} \PYG{o}{=} \PYG{n}{poly}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{m}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{):}
+        \PYG{n}{response} \PYG{o}{=} \PYG{n}{trace\PYGZus{}pm\PYGZus{}to\PYGZus{}pm\PYGZus{}1}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{i}\PYG{p}{,} \PYG{n}{response}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{response}
+
+\PYG{k}{def} \PYG{n+nf}{fast\PYGZus{}trace\PYGZus{}pm\PYGZus{}to\PYGZus{}1}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{m}\PYG{p}{,} \PYG{n}{poly}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Computa o traço mais eficientemente do anel}
+\PYG{l+s+sd}{    Z[x]/phi\PYGZus{}p\PYGZca{}m(x) para os inteiros\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{response} \PYG{o}{=} \PYG{n}{poly}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{m}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{):}
+        \PYG{n}{response} \PYG{o}{=} \PYG{n}{fast\PYGZus{}trace\PYGZus{}pm\PYGZus{}to\PYGZus{}pm\PYGZus{}1}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{i}\PYG{p}{,} \PYG{n}{response}\PYG{p}{)}
+
+    \PYG{k}{return} \PYG{n}{response}
+
+\end{Verbatim}

@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{canon\PYGZus{}dbasis}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,} \PYG{n}{m}\PYG{p}{):}
+    \PYG{n}{f} \PYG{o}{=} \PYG{n}{Zx}\PYG{p}{(}\PYG{n}{cyclotomic\PYGZus{}polynomial}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m}\PYG{p}{))}
+    \PYG{n}{l} \PYG{o}{=} \PYG{n}{vector}\PYG{p}{(}\PYG{n}{Qx}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{*}\PYG{n}{euler\PYGZus{}phi}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m}\PYG{p}{))}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{p}{(}\PYG{n}{m}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)):}
+        \PYG{n}{p\PYGZus{}magic} \PYG{o}{=} \PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{p}{(}\PYG{n}{m}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{i}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m}\PYG{p}{)}
+        \PYG{n}{fj} \PYG{o}{=} \PYG{p}{(}\PYG{n}{Zx}\PYG{p}{(}\PYG{n}{x}\PYG{o}{**}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m} \PYG{o}{\PYGZhy{}} \PYG{n}{i}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{x}\PYG{o}{**}\PYG{n}{p\PYGZus{}magic}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{n}{f}\PYG{p}{)}
+        \PYG{n}{l}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{fj}
+
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{p}{(}\PYG{n}{m}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{euler\PYGZus{}phi}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m}\PYG{p}{)):}
+        \PYG{n}{p\PYGZus{}magic} \PYG{o}{=} \PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{p}{(}\PYG{n}{m}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{i}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m}\PYG{p}{)}
+        \PYG{n}{fj} \PYG{o}{=} \PYG{p}{(}\PYG{n}{Zx}\PYG{p}{(}\PYG{n}{x}\PYG{o}{**}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m} \PYG{o}{\PYGZhy{}} \PYG{n}{i}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{x}\PYG{o}{**}\PYG{n}{p\PYGZus{}magic}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{n}{f}\PYG{p}{)}
+        \PYG{n}{fj} \PYG{o}{=} \PYG{n}{fj} \PYG{o}{+} \PYG{n}{l}\PYG{p}{[}\PYG{n}{i} \PYG{o}{\PYGZhy{}} \PYG{n}{p}\PYG{o}{**}\PYG{p}{(}\PYG{n}{m}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)]}
+        \PYG{n}{l}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{fj}
+
+    \PYG{k}{return} \PYG{n}{l}\PYG{o}{/}\PYG{p}{(}\PYG{n}{p}\PYG{o}{**}\PYG{n}{m}\PYG{p}{)}
+\end{Verbatim}

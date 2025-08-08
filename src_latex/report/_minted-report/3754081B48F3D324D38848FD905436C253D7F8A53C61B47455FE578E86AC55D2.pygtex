@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{n}{R} \PYG{o}{=} \PYG{n}{PolynomialRing}\PYG{p}{(}\PYG{n}{ZZ}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}x\PYGZsq{}}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} Compose the polynomial in the original polynomial ring,}
+    \PYG{c+c1}{\PYGZsh{} performing the isomorfism and the multiplication}
+    \PYG{k}{def} \PYG{n+nf}{compose\PYGZus{}poly}\PYG{p}{(}\PYG{n}{factors\PYGZus{}m}\PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{,} \PYG{n}{poly\PYGZus{}m}\PYG{p}{:}\PYG{n+nb}{list}\PYG{p}{,} \PYG{n}{m}\PYG{p}{:}\PYG{n+nb}{int}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Computes the polynomial in the original field}
+\PYG{l+s+sd}{    factors\PYGZus{}m: A tuple list representing the prime power that divides m}
+\PYG{l+s+sd}{    poly\PYGZus{}m[i]: the polynomial in the field K\PYGZus{}\PYGZob{}p\PYGZus{}i \PYGZca{}m\PYGZus{}i\PYGZcb{} that decomposes}
+\PYG{l+s+sd}{    the original poly}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+        \PYG{n}{poly} \PYG{o}{=} \PYG{l+m+mi}{1}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{poly\PYGZus{}m}\PYG{p}{)):}
+            \PYG{n}{poly} \PYG{o}{=} \PYG{n}{poly} \PYG{o}{*} \PYG{n}{poly\PYGZus{}m}\PYG{p}{[}\PYG{n}{i}\PYG{p}{](}\PYG{n}{x}\PYG{o}{\PYGZca{}}\PYG{p}{(}\PYG{n}{m}\PYG{o}{/}\PYG{p}{(}\PYG{n}{factors\PYGZus{}m}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{**} \PYG{n}{factors\PYGZus{}m}\PYG{p}{[}\PYG{n}{i}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{])))}
+
+        \PYG{k}{return} \PYG{n}{R}\PYG{p}{(}\PYG{n}{poly}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{n}{R}\PYG{p}{(}\PYG{n}{cyclotomic\PYGZus{}polynomial}\PYG{p}{(}\PYG{n}{m}\PYG{p}{))}
+\end{Verbatim}

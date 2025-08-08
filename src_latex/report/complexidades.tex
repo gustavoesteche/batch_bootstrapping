@@ -1,0 +1,35 @@
+\section{Complexidades e Definições de parâmetro}
+
+\subsection{Complexidade de Memória}
+Trivialmente, um inteiro com tamanho máximo $Q$ pode ser representado por $\log Q$ bits. Logo um polinômio de grau $N$ com seus coeficientes de tamanho 
+máximo a $N \log Q$
+
+\begin{itemize}
+    \item RGSW: $2N \log^2 Q (\text{evk}) + [\phi(m_2) + \phi(m_3)] \log Q (\text{Automorfismos}) + [\phi(m_2) + \phi(m_3)] 2 N \log^2 Q (\text{KS}) + 
+    6 \log Q (\text{máximo superestimado}) \approx O(r N \log^2 Q)$
+    \item RLWE $6 \log Q (\text{máximo superestimado})$
+    \item chaves $4 N \log Q (\text{máximo superestimado})$
+    \item Total parece ser proporcional a $\approx O(r N \log^2 Q)$
+\end{itemize}
+
+Criptogramas RGSW $4 N \log^2 Q$ / Criptogramas RLWE $2N \log Q$
+
+\subsection{Complexidade de Tempo}
+
+Produto externo + Traço
+
+    
+Produto Externo:
+\begin{itemize}
+    \item Decompor dois polinomios, decompor $\phi(N)$ vezes a complexidade de decompor um inteiro na base necessária (base normalmente é 2) 
+    \item Multiplicar um vetor de $(1 \times 2\ell)$ por uma matrix $(2\ell \times 2)$ onde cada indíce é um polinômio representado por $N \log Q$ bits,
+    basicamente $4 \ell$ multiplicações e $4\ell - 2$ adições.
+\end{itemize}
+
+Traço Homomórfico:
+\begin{itemize}
+    \item Produto externo
+    \item Se o corpo reduzido tem como potência de primo $m$, vamos ter $\log d$ chamadas de key-switch, cada key switch faz $2\ell$ multiplicacoes e $2\ell - 2$ somas.
+    
+    No total seria algo como $\log d \times (2 \ell \text{ multiplicações} + 2 \ell \text{ adições}) $
+\end{itemize}

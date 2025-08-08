@@ -1,0 +1,48 @@
+\section{Traço homomórfico sobre RLWE}
+
+O objetivo é encontrar uma maneira de executar o Eval-Trace, isto é, dado um criptograma $d \in \text{RLWE}_s(\mu)$ computar um criptograma 
+$d' \in \text{RLWE}_s(Tr_{K/K_{13}}(\mu))$ homomorficamente, ou seja, sem ter acesso a mensagem original.
+
+\input{key_switch.tex}
+
+\subsection{Pseudocódigo do algoritmo}
+
+Basta apresentar o algoritmo utilizado para o Eval-trace, no pseudocódigo a seguir foi escolhido um traço em específico 
+mas note que basta apenas trocá-lo pelo outro cenário.  
+
+
+\begin{algorithm}[H]
+\caption{(RLWE)-Eval-Tr\(_{K/K_{13}}\) com a estrutura de torre}
+\SetKwInOut{Input}{Entrada}
+\SetKwInOut{Output}{Saída}
+
+\Input{
+\begin{itemize}
+  \item \(c = (b, a) \in (\mcR)^2\) que encripta uma mensagem \(\mu \in \mcR\) sob um segredo \(s \in \mathcal{R}\).
+  \item \(\{\text{evk}^{(\sigma)}\}_{\sigma \in \bigcup_{i=1}^{t-1} \text{Gal}(E_i/E_{i+1})}\), e \(\text{evk} \in \text{RGSW}_s(P^{-1} \cdot s) \in \mathcal{R}^2\).
+\end{itemize}
+}
+\Output{
+\(c_{out} \in \text{RLWE}_s(\text{Tr}_{K/K_{13}}(\mu))\).
+}
+
+Inicialize \(c = (b, a)\)\\
+Calcule \(d = \text{evk} \boxtimes (0, a)\) \\
+\For{\(i = 1\) até \(t - 1\)}{
+  Tome $(d_1, d_2) \gets d$\\
+  Calcule \(d' = \sum_{\sigma \in \text{Gal}(E_i/E_{i+1})} \text{KS}( \sigma(d_1), \sigma(d_2), \text{evk}^{(\sigma^{-1})})\)\\
+  Atualize $d = d'$ e $d' = (0,0)$
+}
+Retorne \((\text{Tr}_{K/K_{13}}(b), 0) - d\) 
+\end{algorithm}
+
+Perceba que como armazenamos os criptogramas já em $\mcR$ a multiplicação por tal fator aqui se torna desnecessária. Para computar
+as chaves necessárias evk e as relativas ao key-switch, a classe que implementa o esquema RGSW calcula tais valores assim 
+que instanciada.
+
+Para mostrar sua corretude, observe que antes do loop $d \in \RLWE_s{as}$, durante o loop calculamos o traço encriptado $as$
+com ajudar do key-switch. Logo, o algortimo retorna
+$$
+  (\text{Tr}_{K/K_{13}}(b - as) - a's - e, - a') = (-a's + \text{Tr}_{K/K_{13}}(\mu) \frac{Q}{B} + e' , -a')
+$$
+ou seja, um criptograma válido de $\RLWE_s(\text{Tr}_{K/K_{13}}(\mu))$.

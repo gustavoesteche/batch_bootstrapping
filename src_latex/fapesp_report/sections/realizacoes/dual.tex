@@ -1,0 +1,46 @@
+\subsection{Dual}
+
+O cálculo da base dual dos corpos trabalhado é essencial para o empacotamento proposto em \cite{lw23I}. Seja $K = \mathbb{Q}(\zeta_m)$ e $B = \{b_j\}$ uma base de $K$ sobre $\mathbb{Q}$. Define-se a base dual $B^v = \{b_j^v\}$ por:
+\[
+\mathrm{Tr}(b_i b_j^v) = \delta_{ij}
+\]
+O que implica que qualquer elemento $a \in K$ satisfaz $a_j = \mathrm{Tr}(a b_j^v)$.
+
+No caso da base canônica $[x^0,x^1, \dots, x^{\varphi(p^n)-1}]$, o problema se reduz a encontrar elementos $k_i$ que satisfaçam:
+\[
+\mathrm{Tr}(x^i k_j) = \delta_{ij} \cdot p^n
+\]
+Utiliza-se para isso os polinômios $k_i = x^{p^n - i} - x^{p^{n-1} - i}$, com base na fórmula:
+\[
+\mathrm{Tr}(x^j) =
+\begin{cases}
+\varphi(p^n) & \text{se } j \equiv 0 \pmod{p^n} \\
+-p^{n-1} & \text{se } j \equiv 0 \pmod{p^{n-1}} \wedge j \not\equiv 0 \pmod{p^n} \\
+0 & \text{caso contrário}
+\end{cases}
+\]
+
+Esse $k_i$ satisfaz $\mathrm{Tr}(x^i k_i) = p^n$, mas falha para o par $(i, i + p^{n-1})$. Para corrigir, redefine-se:
+\[
+k_{i + p^{n-1}} := k_{i + p^{n-1}} + k_i
+\]
+Garantindo que $\mathrm{Tr}(x^j k_i) = 0$ para $j \neq i$ e $\mathrm{Tr}(x^i k_i) = p^n$.
+
+Assim, temos o seguinte algoritmo para computar a base dual canônica:
+
+\begin{algorithm}[H]
+\caption{\texttt{canon\_dbasis(p, n)}}
+\KwIn{Primo $p$, inteiro $n \geq 1$}
+\KwOut{Base dual canônica de $\mathbb{Q}(\zeta_{p^n})$}
+$f \gets \Phi_{p^n}(x)$ \\
+Inicializa vetor $l$ com zeros em $\mathbb{Q}[x]/(f)$ \\
+\For{$i \gets 0$ \KwTo $p^{n-1} - 1$}{
+    $l[i] \gets (x^{p^n - i} - x^{p^{n-1} - i}) \bmod f$
+}
+\For{$i \gets p^{n-1}$ \KwTo $\varphi(p^n) - 1$}{
+    $l[i] \gets (l[i] + l[i - p^{n-1}])/p^n$
+}
+\Return{$l$}
+\end{algorithm}
+
+Cada elemento da base resultante tem norma infinita $\leq 2(p-1)/p^n$, propriedade que será útil na análise de ruído em aplicações criptográficas. A implementação foi feita em SageMath e C++.  

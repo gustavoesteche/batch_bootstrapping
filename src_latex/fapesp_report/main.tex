@@ -1,0 +1,72 @@
+\documentclass[a4paper,10pt]{article} 
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{minted} % código no latex
+\usepackage[utf8]{inputenc} % pseudocódigo no latex
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e} % pseudocódigo no latex
+
+\usepackage{url}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage[backend=biber,style=numeric,language=portuguese]{biblatex}
+\addbibresource{referencias.bib}
+
+\usepackage[portuguese]{babel}
+% Definitions in Portuguese
+\numberwithin{equation}{section} % Opcional, se quiser equações numeradas por seção
+
+% comandos de atalhos
+\newcommand{\mcR}{\mathcal{R}}
+\newcommand{\RLWE}{\text{RLWE}}
+
+\newcommand{\mbbQ}{\mathbb{Q}}
+
+% Define o estilo e a numeração por seção
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{proposition}[theorem]{Proposição}
+\newtheorem{corollary}[theorem]{Corolário}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definição}
+
+\title{\Huge Implementação e análise de eficiência do bootstrapping amortizado}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+{\Large
+
+Número do Processo - 2024/06478-4
+
+
+Período de Vigência - 01/08/2024 a 31/07/2025
+
+
+Período do Relatório científico - 01/08/2025 a 10/08/2025
+
+}
+
+\newpage 
+
+\input{sections/resumo}
+
+\newpage
+
+\input{sections/realizacoes}
+
+\newpage
+\printbibliography
+
+\end{document}

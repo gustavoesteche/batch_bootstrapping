@@ -1,0 +1,24 @@
+\section{\Large Realizações}
+
+Para fundamentar esta pesquisa, é necessário abordar a base matemática envolvida e os
+resultados essenciais à sua implementação, que foi realizada inicialmente em SageMath, com forte base na implementação presente em \cite{SBSeg21:PM}, e em C++ utilizando-se da biblioteca NTL \footnote{\url{https://libntl.org/}} \cite{shoupNTL}. Ambas implementações estão presentes no repositório no github\footnote{\url{https://github.com/gustavoesteche/ic-bootstraping}}. Primeiramente, serão definidos
+os anéis e os corpos utilizados e suas relações, posteriormente, os resultados de como 
+efetuar os traços entre os mesmos e como computar as suas bases duais. 
+Segundamente, serão definidos os esquemas RLWE e RGSW que foram implementados, 
+nos quais o produto externo descrito em \cite{lw23I} é efetuado, sobre o \emph{framework} 
+definido pelo mesmo trabalho. Finalmente, será feita uma análise de ruído e complexidade 
+destas operações, bem como uma análise sobre sua viabilidade de utilização. 
+
+\input{sections/realizacoes/composicao}
+
+\input{sections/realizacoes/trace}
+
+\input{sections/realizacoes/dual}
+
+\input{sections/realizacoes/RLWE_RGSW}
+
+\input{sections/realizacoes/framework}
+
+\input{sections/realizacoes/noise_analysis}
+
+\input{sections/realizacoes/conclusoes}

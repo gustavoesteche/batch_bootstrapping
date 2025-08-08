@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{trace\PYGZus{}Rr1\PYGZus{}to\PYGZus{}R}\PYG{p}{(}\PYG{n}{poly1}\PYG{p}{,} \PYG{n}{p1}\PYG{p}{,} \PYG{n}{m1}\PYG{p}{,} \PYG{n}{poly\PYGZus{}m}\PYG{p}{,} \PYG{n}{index} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+\PYG{l+s+sd}{    Computes Tr\PYGZus{}\PYGZob{}Rr1/R\PYGZcb{} based on the index}
+\PYG{l+s+sd}{    \PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{trace} \PYG{o}{=} \PYG{n}{fast\PYGZus{}trace\PYGZus{}pm\PYGZus{}to\PYGZus{}1}\PYG{p}{(}\PYG{n}{p1}\PYG{p}{,} \PYG{n}{m1}\PYG{p}{,} \PYG{n}{poly1}\PYG{p}{)}
+
+    \PYG{n}{trace\PYGZus{}res} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{poly} \PYG{o+ow}{in} \PYG{n}{poly\PYGZus{}m}\PYG{p}{:}
+        \PYG{n}{trace\PYGZus{}res}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{poly}\PYG{p}{)}
+
+    \PYG{n}{trace\PYGZus{}res}\PYG{p}{[}\PYG{n}{index}\PYG{p}{]} \PYG{o}{=} \PYG{n}{trace\PYGZus{}res}\PYG{p}{[}\PYG{n}{index}\PYG{p}{]} \PYG{o}{*} \PYG{n}{trace}
+    \PYG{k}{return} \PYG{n}{trace\PYGZus{}res}
+\end{Verbatim}

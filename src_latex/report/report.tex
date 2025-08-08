@@ -1,0 +1,121 @@
+\documentclass[a4paper,10pt]{article} 
+\usepackage[margin=1in]{geometry}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{minted} % código no latex
+\usepackage[utf8]{inputenc} % pseudocódigo no latex
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e} % pseudocódigo no latex
+
+\title{Relatório sobre a implementação do bootstraping amortizado}
+\author{
+    Aluno: Gustavo Esteche Araujo\\
+    Orientador: Prof. Hilder Vitor Lima Pereira
+}
+\date{}
+
+\usepackage[portuguese]{babel}
+% Definitions in Portuguese
+\numberwithin{equation}{section} % Opcional, se quiser equações numeradas por seção
+
+% comandos de atalhos
+\newcommand{\mcR}{\mathcal{R}}
+\newcommand{\RLWE}{\text{RLWE}}
+
+% Define o estilo e a numeração por seção
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{proposition}[theorem]{Proposição}
+\newtheorem{corollary}[theorem]{Corolário}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definição}
+
+\begin{document} 
+
+\maketitle
+
+\section{Introdução}
+\textbf{Aviso}: Ao comparar com o relatório parcial, note que este relatório melhora partes presentes no anterior e adiciona os progressos feitos na pesquisa. 
+Para ver apenas o que foi substancialmente melhorado ou adicionado, comece a leitura pela seção 4 sobre duais. O código foi suprimido em várias seções por razões 
+de comprimento, cheque o github para mais detalhes.
+
+Neste relatório está escrito o que foi produzido em relação a pesquisa sobre a implementação do 
+bootstraping amortizado descrito em \cite{lw23I} e \cite{lw23II}. A parte inicial da pesquisa se 
+resumiu a um estudo de nivelamento sobre álgebra abstrata, para melhor compreender os objetos 
+matemáticos relacionados à pesquisa. A pesquisa prosseguiu com a implementação das operações essenciais para 
+viabilizar o bootstrapping proposto, de modo que os algoritmos descritos nos artigos pudessem, por fim, ser integralmente 
+implementados e, assim, ter sua viabilidade de utilização devidamente analisada. 
+O relatório foi produzido 
+compilando os resultados de cada seção individual. Para acessar o conteúdo escrito e acessar também as implementações e testes,
+segue o link para o github \url{https://github.com/gustavoesteche/ic-bootstraping}.
+
+\input{trace}
+
+\newpage
+
+\input{tensor_composition.tex}
+
+\newpage
+
+\input{dual.tex}
+
+\newpage
+
+\input{RGSW_RLWE.tex}
+
+\newpage
+
+\input{packing.tex}
+
+\newpage
+
+\input{homo_trace.tex}
+
+\newpage
+
+\input{noise_analysis.tex}
+
+\newpage
+
+\input{complexidades.tex}
+
+\newpage
+
+\begin{thebibliography}{9}
+    \bibitem{lyubashevsky2013}
+    Lyubashevsky, V., Peikert, C., Regev, O.:
+    \textit{A toolkit for ring-LWE cryptography}.
+    In: Johansson, T., Nguyen, P.Q. (eds.) EUROCRYPT 2013. LNCS, vol. 7881, pp. 35–54. Springer, Heidelberg (2013).
+    Available at: \url{https://eprint.iacr.org/2013/293.pdf}
+    
+    \bibitem{lw23I}
+    Liu, F.-H., Wang, H.:
+    \textit{Batch Bootstrapping I: A New Framework for SIMD Bootstrapping in Polynomial Modulus.} 
+    In: Advances in Cryptology -- EUROCRYPT 2023: 42nd Annual International Conference on the Theory and Applications of Cryptographic Techniques, 
+    Lyon, France, April 23–27, 2023, Proceedings, Part III, pp. 321–352. 
+    Springer, Berlin, Heidelberg (2023). 
+    Available at: \url{https://doi.org/10.1007/978-3-031-30620-4_11}
+    
+    \bibitem{lw23II}
+    Liu, F.-H., Wang, H.:
+    \textit{Batch Bootstrapping II: Bootstrapping in Polynomial Modulus only Requires Õ(1) FHE Multiplications in Amortization.}
+    In: Advances in Cryptology -- EUROCRYPT 2023: 42nd Annual International Conference on the Theory and Applications of Cryptographic Techniques, 
+    Lyon, France, April 23–27, 2023, Proceedings, Part III, pp. 353–384. 
+    Springer, Berlin, Heidelberg (2023). 
+    Available at: \url{https://doi.org/10.1007/978-3-031-30620-4_12}
+    
+    \bibitem{BrakerskiEtAl2013}
+    Brakerski, Z., Langlois, A., Peikert, C., Regev, O., Stehlé, D.: Classical hardness of learning with errors. In: Boneh, D., Roughgarden, T., Feigenbaum, J. (eds.) 45th ACM STOC, pp. 575--584. ACM Press (2013)
+
+    \bibitem{Balbas2021}
+    Balbás, D.: The Hardness of LWE and Ring-LWE: A Survey. Cryptology ePrint Archive, Paper 2021/1358 (2021)
+
+    \end{thebibliography}
+\end{document}

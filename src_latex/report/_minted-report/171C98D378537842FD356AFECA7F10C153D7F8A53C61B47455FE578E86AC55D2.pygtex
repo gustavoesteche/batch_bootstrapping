@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{def} \PYG{n+nf}{inv\PYGZus{}g\PYGZus{}ZZ}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{B}\PYG{p}{,} \PYG{n}{Q}\PYG{p}{):}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n}{sym\PYGZus{}mod}\PYG{p}{(}\PYG{n}{ZZ}\PYG{p}{(}\PYG{n}{x}\PYG{p}{),} \PYG{n}{Q}\PYG{p}{)}
+        \PYG{n}{l} \PYG{o}{=} \PYG{n}{ceil}\PYG{p}{(}\PYG{n}{log}\PYG{p}{(}\PYG{n}{Q}\PYG{p}{,}\PYG{n}{B}\PYG{p}{))}
+        \PYG{k}{return} \PYG{n}{vector}\PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{digits}\PYG{p}{(}\PYG{n}{base}\PYG{o}{=}\PYG{n}{B}\PYG{p}{,} \PYG{n}{padto}\PYG{o}{=}\PYG{n}{l}\PYG{p}{))}
+
+    \PYG{k}{def} \PYG{n+nf}{inv\PYGZus{}g\PYGZus{}poly}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{B}\PYG{p}{,} \PYG{n}{Q}\PYG{p}{,} \PYG{n}{n}\PYG{p}{):}
+        \PYG{n}{l} \PYG{o}{=} \PYG{n}{ceil}\PYG{p}{(}\PYG{n}{log}\PYG{p}{(}\PYG{n}{Q}\PYG{p}{,}\PYG{n}{B}\PYG{p}{))}
+        \PYG{n}{result} \PYG{o}{=} \PYG{n}{vector}\PYG{p}{(}\PYG{n}{Zx}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{*}\PYG{n}{l}\PYG{p}{)}
+        \PYG{n}{pow\PYGZus{}x} \PYG{o}{=} \PYG{n}{Zx}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{euler\PYGZus{}phi}\PYG{p}{(}\PYG{n}{n}\PYG{p}{)):}
+            \PYG{n}{result} \PYG{o}{+=} \PYG{n}{pow\PYGZus{}x} \PYG{o}{*} \PYG{n}{inv\PYGZus{}g\PYGZus{}ZZ}\PYG{p}{(}\PYG{n}{x}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{B}\PYG{p}{,} \PYG{n}{Q}\PYG{p}{)}
+            \PYG{n}{pow\PYGZus{}x} \PYG{o}{*=} \PYG{n}{Zx}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{result}
+\end{Verbatim}

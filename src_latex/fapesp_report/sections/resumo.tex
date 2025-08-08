@@ -1,0 +1,15 @@
+\section{Resumo}
+
+O presente trabalho trata da implementação e análise de um \textit{framework} voltado para operações homomórficas, em particular aquelas empregadas em esquemas de criptografia baseados em Learning With Errors (LWE) e suas variantes de anel (RLWE). Tais esquemas têm sido objeto de intensa pesquisa devido à sua relevância prática e segurança pós-quântica, conforme discutido em \cite{bgv12, gsw13, cggi16, lw23I}. 
+
+A principal motivação desta pesquisa reside na execução eficiente de operações de \textit{bootstrapping}, incluindo versões amortizadas, no caso \cite{lw23I}, que exploram simetrias e decomposições estruturais para reduzir o custo computacional. Foi realizado um estudo sobre a base matemática necessária, com ênfase no necessário para aplicar o produto externo no \textit{framework} proposto.
+
+Durante o desenvolvimento, foram projetados e implementados algoritmos para computar o traço entre determinados anéis e corpos ciclotômicos, para definir bases duais, implementar operações tensoriais, 
+além de testes, baseado nas propriedades requeridas, para garantir a corretude da implementação. Também foram implementados os esquemas RLWE e RGSW no formato requerido pelo \textit{framework}, além de claro, o próprio \textit{framework}.
+
+Foram também conduzidos experimentos de desempenho temporal e do comportamento de ruído para comparação com resultados da literatura, utilizando parâmetros compatíveis com \cite{lw23I, Guimaraes2023Amortized}. No entanto, a implementação atual, embora funcional, apresenta gargalos que impedem a verificação completa do potencial teórico do \textit{framework} proposto em relação ao seu desempenho. Em particular, algumas operações críticas, como multiplicações de alta dimensão e transformadas, não se beneficiam ainda de otimizações como o uso de NTTs mais otimizadas, a substituição do módulo $Q$ por um primo adequado, decomposições mais eficientes, uso de CRT, pré-computação dos automorfismos na base (com \textit{trade-off} de memória), entre outras técnicas possíveis descritas em artigos \cite{lw23II, lyubashevsky2013}. Já em relação ao ruído, o resultado encontrado foi positivo, com a constante escondida pela análise assintótica podendo ser $1$ na prática. 
+
+Assim, conclui-se que, embora a implementação atinja seus objetivos funcionais iniciais, é imprescindível uma reestruturação orientada à otimização para assegurar que as comparações experimentais de desempenho com o estado da arte sejam justas e representativas. Tais melhorias permitirão explorar plenamente o ganho teórico prometido pelos métodos descritos em \cite{Guimaraes2023Amortized, lw23I}, além de contribuir para o desenvolvimento de implementações abertas de alto desempenho em criptografia homomórfica. 
+
+O código fonte, exemplos de uso e testes estão presentes em um repositório\footnote{\url{https://github.com/gustavoesteche/ic-bootstraping}} público no github, sobre licença livre. https://libntl.org/
+

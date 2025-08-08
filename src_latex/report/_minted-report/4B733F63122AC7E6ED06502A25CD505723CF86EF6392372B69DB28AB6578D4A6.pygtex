@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{Zx} \PYG{o}{=} \PYG{n}{PolynomialRing}\PYG{p}{(}\PYG{n}{ZZ}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}x\PYGZsq{}}\PYG{p}{)}
+
+\PYG{k}{def} \PYG{n+nf}{trivial\PYGZus{}trace\PYGZus{}m\PYGZus{}to\PYGZus{}1}\PYG{p}{(}\PYG{n}{poly}\PYG{p}{,} \PYG{n}{m}\PYG{p}{):}
+    \PYG{l+s+sd}{\PYGZsq{}\PYGZsq{}\PYGZsq{}Computa o traço do anel Z[x]/phi\PYGZus{}m(x)}
+\PYG{l+s+sd}{    para os inteiros, somando todos os}
+\PYG{l+s+sd}{    automorfismos definidos pelos expoentes}
+\PYG{l+s+sd}{    coprimos com m.\PYGZsq{}\PYGZsq{}\PYGZsq{}}
+    \PYG{n}{f} \PYG{o}{=} \PYG{n}{cyclotomic\PYGZus{}polynomial}\PYG{p}{(}\PYG{n}{m}\PYG{p}{)}
+    \PYG{n}{coprimes} \PYG{o}{=} \PYG{p}{[}\PYG{n}{x} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{m}\PYG{p}{)} \PYG{k}{if} \PYG{n}{gcd}\PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{m}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{]}
+
+    \PYG{n}{response} \PYG{o}{=} \PYG{n}{Zx}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n}{coprimes}\PYG{p}{:}
+        \PYG{n}{term} \PYG{o}{=} \PYG{n}{Zx}\PYG{p}{(}\PYG{n}{poly}\PYG{p}{(}\PYG{n}{x}\PYG{o}{=}\PYG{n}{x}\PYG{o}{\PYGZca{}}\PYG{n}{i}\PYG{p}{))} \PYG{o}{\PYGZpc{}} \PYG{n}{f}
+        \PYG{n}{response} \PYG{o}{=} \PYG{n}{response} \PYG{o}{+} \PYG{n}{term}
+    \PYG{k}{return} \PYG{n}{response}
+\end{Verbatim}
